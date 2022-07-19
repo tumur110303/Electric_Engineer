@@ -1,16 +1,14 @@
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
 
 import { RouteProp } from "@react-navigation/native";
-import { DrawerNavigationOptions } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 
-import { MainNavigationParams } from "../navigations/MainNavigation";
-import { dark, light, main, w500 } from "../constants";
+import { dark, headerBackground, headerText, light, w500 } from "../constants";
 
 type MainHeaderType = (route: {
-  route: RouteProp<MainNavigationParams, keyof MainNavigationParams>;
+  route: RouteProp<any, keyof any>;
   navigation: any;
-}) => DrawerNavigationOptions;
+}) => any;
 
 const useMainHeader: MainHeaderType = (options) => {
   return {
@@ -18,17 +16,38 @@ const useMainHeader: MainHeaderType = (options) => {
       backgroundColor: "#f6f6f6",
     },
     headerStyle: {
-      backgroundColor: dark,
+      backgroundColor: headerBackground,
       shadowColor: "transparent",
     },
     headerTitleStyle: {
       display: "none",
     },
     headerLeft: () => {
+      const canGoBack = options.navigation.canGoBack();
       return (
-        <TouchableOpacity style={css.left} activeOpacity={0.6}>
-          <Text style={css.name}>{options.route.name}</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          {canGoBack && (
+            <TouchableOpacity
+              style={css.left}
+              activeOpacity={0.6}
+              onPress={() => {
+                options.navigation.goBack();
+              }}
+            >
+              <Ionicons name="arrow-back" size={25} color={headerText} />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              marginLeft: canGoBack ? 5 : 15,
+              alignItems: "center",
+            }}
+            activeOpacity={0.6}
+          >
+            <Text style={css.name}>{options.route.name}</Text>
+          </TouchableOpacity>
+        </View>
       );
     },
     headerRight: () => {
@@ -40,7 +59,7 @@ const useMainHeader: MainHeaderType = (options) => {
           }}
           style={css.menu}
         >
-          <Ionicons name="menu" size={25} color={light} />
+          <Ionicons name="menu" size={25} color={headerText} />
         </TouchableOpacity>
       );
     },
@@ -57,7 +76,7 @@ const css = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    color: light,
+    color: headerText,
     textTransform: "uppercase",
     fontFamily: w500,
     paddingTop: 3,

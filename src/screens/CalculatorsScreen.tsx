@@ -8,9 +8,17 @@ import {
   View,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { dark, light, main, w400, blue, green } from "../constants";
+import {
+  w400,
+  blue,
+  green,
+  mainText,
+  mainBackground,
+  white,
+  main,
+  gray,
+} from "../constants";
 import { useNavigation } from "@react-navigation/native";
-import Modal from "../components/Modal";
 
 type ContentType = {
   title: string;
@@ -23,22 +31,21 @@ const CalculatorScreen: FC = () => {
   const navigation = useNavigation();
   const contents: ContentType[] = [
     {
-      title: "Орон сууцны барилга тооцох",
-      navigationName: "Орон сууц",
-      icon: "home-city-outline",
+      title: "power to voltage",
+      navigationName: "Power to voltage",
+      icon: "lightning-bolt",
       color: blue,
     },
-
     {
-      title: "Гэрэлтүүлгийн тооцооны ашиглалтын коэффициентийн арга",
-      navigationName: "Ашиглалтын коэффициентийн арга",
-      icon: "lightbulb-cfl",
+      title: "Power to Amps",
+      navigationName: "Power to Amps",
+      icon: "lightning-bolt",
       color: green,
     },
     {
-      title: "Гэрэлтүүлгийн тооцооны хувийн чадлын арга",
-      navigationName: "Хувийн чадлын арга",
-      icon: "lightbulb-on",
+      title: "Power calculator",
+      navigationName: "Power calculator",
+      icon: "lightning-bolt",
       color: blue,
     },
   ];
@@ -70,7 +77,7 @@ const CalculatorScreen: FC = () => {
             <MaterialCommunityIcons
               name="chevron-right"
               size={26}
-              color={main}
+              color={blue}
               style={css.chevron}
             />
           </TouchableOpacity>
@@ -84,32 +91,28 @@ export default CalculatorScreen;
 
 const css = StyleSheet.create({
   container: {
-    paddingVertical: 10,
+    height: "100%",
+    backgroundColor: gray,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     flexDirection: "row",
-  },
-  line: {
-    height: "100%",
-    width: 2,
-    backgroundColor: main,
-    marginRight: 10,
   },
   item: {
     flexDirection: "row",
     alignItems: "center",
     position: "relative",
-    backgroundColor: light,
-    paddingVertical: 20,
+    backgroundColor: mainBackground,
+    paddingVertical: 5,
     paddingHorizontal: 15,
-    marginVertical: 10,
-
     borderRadius: 5,
+    borderBottomColor: green,
+    borderBottomWidth: 1,
   },
   title: {
     fontFamily: w400,
     textTransform: "uppercase",
     marginLeft: 10,
-    color: dark,
+    color: mainText,
     marginRight: 10,
   },
   chevron: {
@@ -127,7 +130,7 @@ const css = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.3)",
   },
   overlayContainer: {
-    backgroundColor: light,
+    backgroundColor: white,
     paddingHorizontal: 15,
     paddingVertical: 20,
     marginHorizontal: 5,

@@ -4,7 +4,6 @@ import { useContext } from "react";
 import useMainHeader from "../hooks/useMainHeader";
 
 import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/LoginScreen";
 import CalculatorNavigation from "./CalculatorNavigation";
 
 export type MainNavigationParams = {
@@ -17,12 +16,12 @@ const MainNavigation = () => {
   return (
     <Drawer.Navigator
       screenOptions={(options) => useMainHeader(options)}
-      initialRouteName={"Нүүр хуудас"}
+      initialRouteName={"Home"}
     >
-      <Drawer.Screen name="Нүүр хуудас" component={HomeScreen} />
+      <Drawer.Screen name="Home" component={HomeScreen} />
 
       <Drawer.Screen
-        name="Тооцоолол"
+        name="Calculator"
         options={{
           headerShown: false,
         }}

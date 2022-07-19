@@ -13,7 +13,14 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 
-import { dark, gray, light, main, w400 } from "../constants";
+import {
+  dark,
+  gray,
+  mainBackground,
+  mainText,
+  orange,
+  w400,
+} from "../constants";
 
 const { width, height } = Dimensions.get("window");
 
@@ -44,7 +51,7 @@ const FormPicker: FC<Props> = ({
       {label && <Text style={css.title}>{label}</Text>}
       <View style={css.wrapper}>
         {icon && (
-          <MaterialCommunityIcons name={icon as any} size={24} color={main} />
+          <MaterialCommunityIcons name={icon as any} size={24} color={orange} />
         )}
         <Text style={css.selected}>
           {(() => {
@@ -69,7 +76,7 @@ const FormPicker: FC<Props> = ({
                 style={{
                   width: "100%",
                   height: "100%",
-                  backgroundColor: dark,
+                  backgroundColor: mainBackground,
                   opacity: 0.3,
                 }}
               ></View>
@@ -95,19 +102,6 @@ const FormPicker: FC<Props> = ({
             </ScrollView>
           </View>
         </Modal>
-        {/* <Picker
-          style={css.picker}
-          selectedValue={value}
-          onValueChange={onValueChange}
-        >
-          {options.map((option) => (
-            <Picker.Item
-              key={option.value}
-              label={option.label}
-              value={option.value + ""}
-            />
-          ))}
-        </Picker> */}
       </View>
     </TouchableOpacity>
   );
@@ -123,12 +117,12 @@ const css = StyleSheet.create({
     textTransform: "uppercase",
     fontFamily: w400,
     marginBottom: 5,
-    color: dark,
+    color: mainText,
   },
   wrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: light,
+    backgroundColor: mainText,
     height: 37,
     paddingBottom: 2,
     borderRadius: 5,

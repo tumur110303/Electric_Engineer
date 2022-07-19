@@ -1,0 +1,13 @@
+      <FormPicker
+        label="Кабелийн маяг"
+        icon="google-circles-communities"
+        options={cables}
+        onValueChange={(value: any) => {
+          setValue((state) => {
+            const copyState = { ...state };
+            copyState.cable = value;
+            return copyState;
+          });
+        }}
+        value={value.cable}
+      />

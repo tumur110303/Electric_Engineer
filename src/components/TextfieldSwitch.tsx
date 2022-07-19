@@ -8,13 +8,13 @@ import {
   Platform,
   StyleProp,
   ViewStyle,
+  TouchableOpacity,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 
 import {
-  blue,
   headerText,
+  mainBackground,
   mainText,
   orange,
   red,
@@ -30,14 +30,11 @@ type Props = {
   value?: string | [string, string];
   disabled?: boolean;
   onChangeText?: (value: string) => void;
+  onPress: (value: boolean) => void;
   secure?: boolean;
   style?: StyleProp<ViewStyle>;
   bigUnit?: boolean;
   unitText?: string | [string, string];
-  error?: {
-    text: string;
-    show?: boolean;
-  };
 };
 
 const Textfield: FC<Props> = ({
@@ -48,7 +45,9 @@ const Textfield: FC<Props> = ({
   onChangeText,
   secure,
   style,
-  error,
+  bigUnit,
+  unitText,
+  onPress,
 }) => {
   return (
     <View style={[css.container, style]}>
@@ -69,26 +68,55 @@ const Textfield: FC<Props> = ({
           }}
           editable={!disabled}
         />
-        {error && error.show && (
-          <Animatable.View animation="pulse" duration={500}>
-            <MaterialCommunityIcons
-              name="alert-remove-outline"
-              size={22}
-              color="#DE4839"
-              style={css.checkIcon}
-            />
-          </Animatable.View>
-        )}
-        {error && !error.show && (
-          <Animatable.View animation="pulse" duration={500}>
-            <MaterialCommunityIcons
-              name="checkbox-marked-circle-outline"
-              size={21}
-              color={blue}
-              style={css.checkIcon}
-            />
-          </Animatable.View>
-        )}
+        <View style={css.switchContainer}>
+          <TouchableOpacity
+            style={{
+              width: "48%",
+              height: 31,
+              backgroundColor: bigUnit ? mainText : orange,
+              marginLeft: 5,
+              borderRadius: 5,
+              justifyContent: "center",
+            }}
+            onPress={() => onPress(false)}
+          >
+            <Animatable.View animation="pulse" duration={500}>
+              <Text
+                style={{
+                  fontFamily: bigUnit ? w400 : w500,
+                  textAlign: "center",
+                  color: mainBackground,
+                }}
+              >
+                {unitText ? unitText[0] : ""}
+              </Text>
+            </Animatable.View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              width: "48%",
+              height: 31,
+              backgroundColor: bigUnit ? orange : mainText,
+              marginLeft: 5,
+              borderRadius: 5,
+              justifyContent: "center",
+            }}
+            onPress={() => onPress(true)}
+          >
+            <Animatable.View animation="pulse" duration={500}>
+              <Text
+                style={{
+                  fontFamily: bigUnit ? w500 : w400,
+                  textAlign: "center",
+                  color: mainBackground,
+                }}
+              >
+                {unitText ? unitText[1] : ""}
+              </Text>
+            </Animatable.View>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -110,14 +138,6 @@ const css = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
     position: "relative",
-  },
-  checkIcon: {
-    marginRight: 10,
-    position: "absolute",
-    zIndex: 2,
-    top: "50%",
-    right: 5,
-    transform: [{ translateY: -11 }],
   },
   icon: {
     position: "absolute",

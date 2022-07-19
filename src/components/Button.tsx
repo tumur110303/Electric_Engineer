@@ -1,31 +1,16 @@
 import { FC } from "react";
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-} from "react-native";
-import { gray, light, main, w400 } from "../constants";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { mainBackground, mainText, orange, w500, white } from "../constants";
 
 type Props = {
   children?: string;
   disable?: boolean;
-  style?: StyleProp<ViewStyle>;
   onPress?: () => void;
 };
 
-const Button: FC<Props> = ({
-  children = "button",
-  onPress,
-  disable,
-  style,
-}) => {
+const Button: FC<Props> = ({ children = "button", onPress, disable }) => {
   return (
     <TouchableOpacity
-      style={
-        disable ? [css.container, css.disable, style] : [css.container, style]
-      }
       activeOpacity={disable ? 1 : 0.7}
       onPress={() => {
         if (!disable && onPress) {
@@ -33,7 +18,11 @@ const Button: FC<Props> = ({
         }
       }}
     >
-      <Text style={css.text}>{children}</Text>
+      <View style={disable ? [css.container, css.disable] : [css.container]}>
+        <Text style={disable ? [css.text, css.disableText] : [css.text]}>
+          {children}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -42,19 +31,27 @@ export default Button;
 
 const css = StyleSheet.create({
   container: {
-    backgroundColor: main,
-    paddingVertical: 12,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: orange,
+    borderWidth: 2,
+    marginHorizontal: 60,
+    borderColor: "#ffffff",
+    height: 37,
     borderRadius: 5,
-    marginTop: 5,
   },
   text: {
     textAlign: "center",
     textTransform: "uppercase",
-    fontFamily: w400,
-    color: light,
+    fontFamily: w500,
+    color: mainBackground,
     fontSize: 13,
   },
   disable: {
-    backgroundColor: gray,
+    backgroundColor: mainBackground,
+  },
+  disableText: {
+    color: mainText,
   },
 });

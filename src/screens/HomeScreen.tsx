@@ -9,7 +9,22 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-import { dark, gray, light, main, w400 } from "../constants";
+import {
+  dark,
+  gray,
+  white,
+  main,
+  w400,
+  headerText,
+  green,
+  blue,
+  red,
+  mainBackground,
+  headerBackground,
+  mainText,
+  orange,
+  w500,
+} from "../constants";
 
 type ContentType = {
   title: string;
@@ -23,10 +38,10 @@ const HomeScreen: FC = () => {
 
   const contents: ContentType[] = [
     {
-      title: "Тооцоолох",
-      navigationName: "Тооцоолол",
+      title: "Calculator",
+      navigationName: "Calculator",
       icon: "calculator-variant",
-      subtitle: "Цахилгаан ачаалал тооцох програм",
+      subtitle: "Electrical circuit calculations",
     },
   ];
 
@@ -41,16 +56,16 @@ const HomeScreen: FC = () => {
             style={css.item}
             onPress={() => navigation.navigate(item.navigationName as any)}
           >
-            <MaterialCommunityIcons
-              name={item.icon}
-              size={20}
-              color={light}
-              style={css.icon}
-            />
             <View style={css.text}>
               <Text style={css.title}>{item.title}</Text>
               <Text style={css.subtitle}>{item.subtitle}</Text>
             </View>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={35}
+              color={blue}
+              style={css.chevron}
+            />
           </TouchableOpacity>
         )}
       />
@@ -62,39 +77,39 @@ export default HomeScreen;
 
 const css = StyleSheet.create({
   container: {
-    marginVertical: 10,
-    marginHorizontal: 10,
+    backgroundColor: mainBackground,
+    paddingVertical: 10,
     flex: 1,
   },
   item: {
-    backgroundColor: light,
-    paddingVertical: 20,
-    paddingHorizontal: 15,
-    marginBottom: 15,
+    backgroundColor: gray,
+    marginVertical: 10,
+    paddingVertical: 10,
     borderRadius: 5,
 
     flexDirection: "row",
     alignItems: "center",
 
-    borderLeftColor: main,
-    borderLeftWidth: 3,
+    borderLeftColor: blue,
+    borderLeftWidth: 5,
   },
-  icon: {
-    backgroundColor: main,
-    padding: 10,
-    borderRadius: 1000,
-  },
+
   text: {
     marginLeft: 10,
+    color: mainText,
+  },
+  chevron: {
+    position: "absolute",
+    right: 10,
   },
   title: {
-    fontFamily: w400,
-    color: dark,
+    fontFamily: w500,
+    color: mainText,
     fontSize: 16,
     textTransform: "uppercase",
   },
   subtitle: {
     fontFamily: w400,
-    color: gray,
+    color: mainBackground,
   },
 });
