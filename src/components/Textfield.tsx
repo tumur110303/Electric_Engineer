@@ -90,6 +90,15 @@ const Textfield: FC<Props> = ({
           </Animatable.View>
         )}
       </View>
+      {error && error.show && (
+        <Animatable.Text
+          animation="fadeInLeft"
+          duration={500}
+          style={css.error}
+        >
+          {error.text}
+        </Animatable.Text>
+      )}
     </View>
   );
 };

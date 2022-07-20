@@ -77,21 +77,18 @@ export default HomeScreen;
 
 const css = StyleSheet.create({
   container: {
-    backgroundColor: mainBackground,
+    backgroundColor: gray,
     paddingVertical: 10,
     flex: 1,
   },
   item: {
-    backgroundColor: gray,
+    backgroundColor: mainBackground,
     marginVertical: 10,
     paddingVertical: 10,
     borderRadius: 5,
 
     flexDirection: "row",
     alignItems: "center",
-
-    borderLeftColor: blue,
-    borderLeftWidth: 5,
   },
 
   text: {
@@ -110,6 +107,6 @@ const css = StyleSheet.create({
   },
   subtitle: {
     fontFamily: w400,
-    color: mainBackground,
+    color: blue,
   },
 });

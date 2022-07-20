@@ -43,10 +43,40 @@ const CalculatorScreen: FC = () => {
       color: green,
     },
     {
+      title: "Power to Resistance and Amps",
+      navigationName: "Power to Resistance and Amps",
+      icon: "lightning-bolt",
+      color: blue,
+    },
+    {
+      title: "Power to Capacity",
+      navigationName: "Power to Capacity",
+      icon: "lightning-bolt",
+      color: green,
+    },
+    {
+      title: "Capacity to Power",
+      navigationName: "Capacity to Power",
+      icon: "lightning-bolt",
+      color: blue,
+    },
+    {
+      title: "Powerfactor calculator",
+      navigationName: "Powerfactor calculator",
+      icon: "lightning-bolt",
+      color: green,
+    },
+    {
       title: "Power calculator",
       navigationName: "Power calculator",
       icon: "lightning-bolt",
       color: blue,
+    },
+    {
+      title: "Resistance to Voltage",
+      navigationName: "Resistance to Voltage",
+      icon: "resistor",
+      color: green,
     },
   ];
   return (

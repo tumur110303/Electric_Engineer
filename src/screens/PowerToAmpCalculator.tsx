@@ -29,7 +29,7 @@ type Error = {
   currentType: boolean;
 };
 
-const PowerToAmpCalculatorScreen: FC = () => {
+const PowerToAmpCalculator: FC = () => {
   const calcContext = useContext(CalcContext);
 
   // ########################## Өгөгдлүүд & Options #########################
@@ -73,6 +73,11 @@ const PowerToAmpCalculatorScreen: FC = () => {
         !value.power ||
         !value.current ||
         error.powerFactor;
+    } else {
+      disable =
+        (value.currentType !== "DC" && !value.powerFactor) ||
+        !value.power ||
+        !value.current;
     }
 
     setDisabled(disable);
@@ -173,39 +178,37 @@ const PowerToAmpCalculatorScreen: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    if (calcContext) {
-      const threeSQ = Math.sqrt(3);
+    const threeSQ = Math.sqrt(3);
 
-      const current = value.current ? value.current : 0;
-      const power = value.power ? value.power : 0;
-      const powerFactor = value.powerFactor ? value.powerFactor : 1;
+    const current = value.current ? value.current : 0;
+    const power = value.power ? value.power : 0;
+    const powerFactor = value.powerFactor ? value.powerFactor : 1;
 
-      let voltage = 0;
+    let voltage = 0;
 
-      if (!bigUnitPower) {
-        if (value.currentType === "DC") voltage = power / current;
-        else if (value.currentType === "AC1") {
-          const huwaari = current * powerFactor;
-          voltage = power / huwaari;
-        } else if (value.currentType === "AC3") {
-          const huwaari = current * powerFactor * threeSQ;
-          voltage = power / huwaari;
-        }
-      } else {
-        const powerkW = power * 1000;
-
-        if (value.currentType === "DC") voltage = powerkW / current;
-        else if (value.currentType === "AC1") {
-          const huwaari = current * powerFactor;
-          voltage = powerkW / huwaari;
-        } else if (value.currentType === "AC3") {
-          const huwaari = current * powerFactor * threeSQ;
-          voltage = powerkW / huwaari;
-        }
+    if (!bigUnitPower) {
+      if (value.currentType === "DC") voltage = power / current;
+      else if (value.currentType === "AC1") {
+        const huwaari = current * powerFactor;
+        voltage = power / huwaari;
+      } else if (value.currentType === "AC3") {
+        const huwaari = current * powerFactor * threeSQ;
+        voltage = power / huwaari;
       }
+    } else {
+      const powerkW = power * 1000;
 
-      setResult(voltage);
+      if (value.currentType === "DC") voltage = powerkW / current;
+      else if (value.currentType === "AC1") {
+        const huwaari = current * powerFactor;
+        voltage = powerkW / huwaari;
+      } else if (value.currentType === "AC3") {
+        const huwaari = current * powerFactor * threeSQ;
+        voltage = powerkW / huwaari;
+      }
     }
+
+    setResult(voltage);
   };
 
   return (
@@ -244,11 +247,11 @@ const PowerToAmpCalculatorScreen: FC = () => {
             label="Cosф (power factor)"
             keyboardType="numeric"
             onChangeText={(value) =>
-              valueChangerButarhai(value, "powerFactor", [0, 1])
+              valueChangerButarhai(value, "powerFactor", [0.1, 1])
             }
             value={value.powerFactor ? value.powerFactor + "" : ""}
             error={{
-              text: "Please enter a value between 0-1",
+              text: "Please enter a value between 0.1-1",
               show: error.powerFactor,
             }}
           />
@@ -278,7 +281,7 @@ const PowerToAmpCalculatorScreen: FC = () => {
   );
 };
 
-export default PowerToAmpCalculatorScreen;
+export default PowerToAmpCalculator;
 
 const css = StyleSheet.create({
   container: {
