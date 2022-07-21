@@ -1,17 +1,18 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import CalcContext from "../context/CalcContext";
 import Button from "../components/Button";
 import FormPicker from "../components/FormPicker";
 import { mainBackground, mainText, w400, w500, orange } from "../constants";
 import Textfield from "../components/Textfield";
+import Output from "../components/Output";
+import FormSwitch from "../components/FormSwitch";
 
 type Value = {
   voltage?: number;
   current?: number;
   powerFactor?: number;
-  currentType: "DC" | "AC1" | "AC3";
+  currentType: "DC" | "AC1";
 };
 
 type Error = {
@@ -21,7 +22,7 @@ type Error = {
   currentType: boolean;
 };
 
-const PowerToVoltageCalculator: FC = () => {
+const ResistanceCalculator: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({
@@ -31,12 +32,12 @@ const PowerToVoltageCalculator: FC = () => {
   // Туслах states...
   const [error, setError] = useState<Error>({ currentType: false });
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [smallUnit, setSmallUnit] = useState<boolean>(false);
 
   // Options...
   const currentTypeOptions = [
     { label: "Direct Current", value: "DC" },
-    { label: "Alternating single-phase", value: "AC1" },
-    { label: "Alternating three-phase", value: "AC3" },
+    { label: "Alternating Current", value: "AC1" },
   ];
 
   // Гаралт (хариу)...
@@ -116,25 +117,30 @@ const PowerToVoltageCalculator: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    const threeSQ = Math.sqrt(3);
-
     const current = value.current ? value.current : 0;
     const voltage = value.voltage ? value.voltage : 0;
     const powerFactor = value.powerFactor ? value.powerFactor : 1;
-    let power = 0;
-    let capacity: number | null = 0;
+
+    let resistance = 0;
+    let impedance: number | null = 0;
+
     if (value.currentType === "DC") {
-      power = current * voltage;
-      capacity = null;
+      resistance = voltage / current;
+      impedance = null;
     } else if (value.currentType === "AC1") {
-      power = current * voltage * powerFactor;
-      capacity = power / powerFactor;
-    } else if (value.currentType === "AC3") {
-      power = threeSQ * voltage * current * powerFactor;
-      capacity = power / powerFactor;
+      impedance = voltage / current;
+      resistance = impedance * powerFactor;
     }
 
-    setResult([power, capacity]);
+    if (smallUnit) {
+      resistance = resistance * 1000;
+      impedance = impedance ? impedance * 1000 : null;
+    } else {
+      resistance = resistance;
+      impedance = impedance;
+    }
+
+    setResult([resistance, impedance]);
   };
 
   return (
@@ -184,21 +190,21 @@ const PowerToVoltageCalculator: FC = () => {
 
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
-        <Text style={css.label}>P ( Power, W )</Text>
-        <View style={css.switchContainer}>
-          <Text style={{ textAlign: "center", fontFamily: w500 }}>
-            {result ? Math.round(result[0] * 1000) / 1000 : null}
-          </Text>
-        </View>
+        <FormSwitch
+          onPress={(value) => setSmallUnit(value)}
+          unitText={["Ω", "mΩ"]}
+          unit={smallUnit}
+          label="unit of resistance and impedance"
+        />
+        <Output
+          label="R ( resistance )"
+          result={result ? result[0] : undefined}
+        />
         {value.currentType !== "DC" ? (
-          <View>
-            <Text style={css.label}>S ( Capacity, VA )</Text>
-            <View style={css.switchContainer}>
-              <Text style={{ textAlign: "center", fontFamily: w500 }}>
-                {result ? Math.round(result[1] * 1000) / 1000 : null}
-              </Text>
-            </View>
-          </View>
+          <Output
+            label="Z ( impedance )"
+            result={result ? result[1] : undefined}
+          />
         ) : null}
       </View>
 
@@ -215,7 +221,7 @@ const PowerToVoltageCalculator: FC = () => {
   );
 };
 
-export default PowerToVoltageCalculator;
+export default ResistanceCalculator;
 
 const css = StyleSheet.create({
   container: {

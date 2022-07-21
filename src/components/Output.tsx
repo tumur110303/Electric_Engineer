@@ -24,13 +24,7 @@ export default Output;
 
 const css = StyleSheet.create({
   // Агуулж буй view хэлбэржүүлэлт...
-  container: {
-    marginTop: 5,
-    marginBottom: 30,
-    paddingBottom: 30,
-    borderBottomWidth: 3,
-    borderBottomColor: orange,
-  },
+  container: {},
   title: {
     textTransform: "uppercase",
     fontFamily: w400,

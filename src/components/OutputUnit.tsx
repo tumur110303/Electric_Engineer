@@ -34,7 +34,7 @@ const OutputUnit: FC<Props> = ({
       <View style={css.wrapper}>
         <View style={css.resultContainer}>
           <Text style={{ textAlign: "center", fontFamily: w500 }}>
-            {result}
+            {result ? Math.round(result * 1000000) / 1000000 : undefined}
           </Text>
         </View>
 

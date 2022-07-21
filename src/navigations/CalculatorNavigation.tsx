@@ -20,6 +20,7 @@ import ResistanceVoltageToPowerCalculator from "../screens/ResistanceVoltageToPo
 import ResistanceAmpsToPowerCalculator from "../screens/ResistanceAmpsToPowerCalculator";
 import PowerToResistanceVoltageCalculator from "../screens/PowerToResistanceVoltageCalculator";
 import PowerToVoltageAmps from "../screens/PowerToVoltageAmps";
+import ResistanceCalculator from "../screens/ResistanceCalculator";
 
 export type StackNavigationParams = {
   [name: string]: undefined;
@@ -98,6 +99,10 @@ const CalculatorNavigation = () => {
       <Stack.Screen
         name="Resistance & Current to Power"
         component={ResistanceAmpsToPowerCalculator}
+      />
+      <Stack.Screen
+        name="Resistance calculator"
+        component={ResistanceCalculator}
       />
     </Stack.Navigator>
   );

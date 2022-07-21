@@ -132,6 +132,12 @@ const CalculatorScreen: FC = () => {
       icon: "resistor",
       color: blue,
     },
+    {
+      title: "Resistance calculator",
+      navigationName: "Resistance calculator",
+      icon: "resistor",
+      color: green,
+    },
   ];
   return (
     <View style={css.container}>

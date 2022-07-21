@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import FormPicker from "../components/FormPicker";
 import { mainBackground, mainText, w400, w500, orange } from "../constants";
 import Textfield from "../components/Textfield";
+import OutputUnit from "../components/OutputUnit";
 
 type Value = {
   voltage?: number;
@@ -21,9 +22,7 @@ type Error = {
   currentType: boolean;
 };
 
-const PowerToVoltageCalculator: FC = () => {
-  const calcContext = useContext(CalcContext);
-
+const PowerCalculator: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({
@@ -33,6 +32,7 @@ const PowerToVoltageCalculator: FC = () => {
   // Туслах states...
   const [error, setError] = useState<Error>({ currentType: false });
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
 
   // Options...
   const currentTypeOptions = [
@@ -136,6 +136,14 @@ const PowerToVoltageCalculator: FC = () => {
       capacity = power / powerFactor;
     }
 
+    if (bigUnitPower) {
+      power = power / 1000;
+      capacity = capacity ? capacity / 1000 : null;
+    } else {
+      power = power;
+      capacity = capacity;
+    }
+
     setResult([power, capacity]);
   };
 
@@ -186,21 +194,21 @@ const PowerToVoltageCalculator: FC = () => {
 
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
-        <Text style={css.label}>P ( Power, W )</Text>
-        <View style={css.switchContainer}>
-          <Text style={{ textAlign: "center", fontFamily: w500 }}>
-            {result ? Math.round(result[0] * 1000) / 1000 : null}
-          </Text>
-        </View>
+        <OutputUnit
+          onPress={(value) => setBigUnitPower(value)}
+          label="P ( Active Power )"
+          unitText={["W", "kW"]}
+          result={result ? result[0] : 0}
+          bigUnit={bigUnitPower}
+        />
         {value.currentType !== "DC" ? (
-          <View>
-            <Text style={css.label}>S ( Capacity, VA )</Text>
-            <View style={css.switchContainer}>
-              <Text style={{ textAlign: "center", fontFamily: w500 }}>
-                {result ? Math.round(result[1] * 1000) / 1000 : null}
-              </Text>
-            </View>
-          </View>
+          <OutputUnit
+            onPress={(value) => setBigUnitPower(value)}
+            label="S ( Apparent Power )"
+            unitText={["VA", "kVA"]}
+            result={result ? result[1] : 0}
+            bigUnit={bigUnitPower}
+          />
         ) : null}
       </View>
 
@@ -217,7 +225,7 @@ const PowerToVoltageCalculator: FC = () => {
   );
 };
 
-export default PowerToVoltageCalculator;
+export default PowerCalculator;
 
 const css = StyleSheet.create({
   container: {
