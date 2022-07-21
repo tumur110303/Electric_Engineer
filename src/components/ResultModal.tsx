@@ -54,12 +54,6 @@ const ResultModal: FC<Props> = ({
 export default ResultModal;
 
 const css = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
   overlay: {
     position: "absolute",
     width: "100%",

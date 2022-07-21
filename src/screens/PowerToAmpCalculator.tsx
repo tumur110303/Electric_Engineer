@@ -39,7 +39,6 @@ const PowerToAmpCalculator: FC = () => {
   });
 
   // Туслах өгөгдлүүд...
-  const [buttonText, setButtonText] = useState<string>("calculate");
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
 
   // Туслах states...

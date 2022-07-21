@@ -70,53 +70,6 @@ const PowerToVoltageCalculator: FC = () => {
     setDisabled(disable);
   }, [value, error]);
 
-  // Бүхэл тоон утга авах функц...
-  const valueChanger = (
-    text: string,
-    id: keyof Value,
-    validation?: [number, number]
-  ) => {
-    const key = typeof id === "object" ? id[0] : id;
-    if (text !== "") {
-      const number = parseInt(text);
-
-      // Error state шалгах хэсэг...
-      if (validation) {
-        if (number < validation[0] || validation[1] < number) {
-          setError((state) => {
-            state[key] = true;
-            return state;
-          });
-        } else {
-          setError((state) => {
-            state[key] = false;
-            return state;
-          });
-        }
-      } else {
-        setError((state) => {
-          state[key] = false;
-          return state;
-        });
-      }
-
-      // Утга олгох хэсэг...
-      setValue((value) => {
-        const copy: any = { ...value };
-        copy[key] = number;
-
-        return copy;
-      });
-    } else {
-      setValue((value) => {
-        const copy: any = { ...value };
-        copy[key] = undefined;
-
-        return copy;
-      });
-    }
-  };
-
   // Бутархай тоон утга авах функц...
   const valueChangerButarhai = (
     text: string,
@@ -233,7 +186,7 @@ const PowerToVoltageCalculator: FC = () => {
 
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
-        <Text style={css.label}>P ( Power, kW )</Text>
+        <Text style={css.label}>P ( Power, W )</Text>
         <View style={css.switchContainer}>
           <Text style={{ textAlign: "center", fontFamily: w500 }}>
             {result ? Math.round(result[0] * 1000) / 1000 : null}
@@ -241,7 +194,7 @@ const PowerToVoltageCalculator: FC = () => {
         </View>
         {value.currentType !== "DC" ? (
           <View>
-            <Text style={css.label}>S ( Capacity, kVA )</Text>
+            <Text style={css.label}>S ( Capacity, VA )</Text>
             <View style={css.switchContainer}>
               <Text style={{ textAlign: "center", fontFamily: w500 }}>
                 {result ? Math.round(result[1] * 1000) / 1000 : null}

@@ -11,21 +11,19 @@ import FormSwitch from "../components/FormSwitch";
 
 type Value = {
   power?: number;
-  voltage?: number;
+  resistance?: number;
   powerFactor?: number;
   currentType: "DC" | "AC1";
 };
 
 type Error = {
   power?: boolean;
-  voltage?: boolean;
+  resistance?: boolean;
   powerFactor?: boolean;
   currentType: boolean;
 };
 
-const PowerToResistanceAmpsCalculator: FC = () => {
-  const calcContext = useContext(CalcContext);
-
+const PowerToVoltageAmps: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({
@@ -65,64 +63,17 @@ const PowerToResistanceAmpsCalculator: FC = () => {
       disable =
         (value.currentType !== "DC" && !value.powerFactor) ||
         !value.power ||
-        !value.voltage ||
+        !value.resistance ||
         error.powerFactor;
     } else {
       disable =
         (value.currentType !== "DC" && !value.powerFactor) ||
         !value.power ||
-        !value.voltage;
+        !value.resistance;
     }
 
     setDisabled(disable);
   }, [value, error]);
-
-  // Бүхэл тоон утга авах функц...
-  const valueChanger = (
-    text: string,
-    id: keyof Value,
-    validation?: [number, number]
-  ) => {
-    const key = typeof id === "object" ? id[0] : id;
-    if (text !== "") {
-      const number = parseInt(text);
-
-      // Error state шалгах хэсэг...
-      if (validation) {
-        if (number < validation[0] || validation[1] < number) {
-          setError((state) => {
-            state[key] = true;
-            return state;
-          });
-        } else {
-          setError((state) => {
-            state[key] = false;
-            return state;
-          });
-        }
-      } else {
-        setError((state) => {
-          state[key] = false;
-          return state;
-        });
-      }
-
-      // Утга олгох хэсэг...
-      setValue((value) => {
-        const copy: any = { ...value };
-        copy[key] = number;
-
-        return copy;
-      });
-    } else {
-      setValue((value) => {
-        const copy: any = { ...value };
-        copy[key] = undefined;
-
-        return copy;
-      });
-    }
-  };
 
   // Бутархай тоон утга авах функц...
   const valueChangerButarhai = (
@@ -172,49 +123,43 @@ const PowerToResistanceAmpsCalculator: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    const voltage = value.voltage ? value.voltage : 0;
+    const resistance = value.resistance ? value.resistance : 0;
     const power = value.power ? value.power : 0;
     const powerFactor = value.powerFactor ? value.powerFactor : 1;
 
     let current = 0;
-    let resistance = 0;
+    let voltage = 0;
     let impedance: number | null = 0;
 
     if (!bigUnitPower) {
       if (value.currentType === "DC") {
-        current = power / voltage;
-        resistance = voltage / current;
+        const sq = power / resistance;
+        current = Math.sqrt(sq);
+        voltage = power / current;
         impedance = null;
       } else if (value.currentType === "AC1") {
-        const huwaari = voltage * powerFactor;
-        current = power / huwaari;
-        impedance = voltage / current;
-        resistance = impedance * powerFactor;
+        const sq = power / resistance;
+        current = Math.sqrt(sq);
+        voltage = power / (current * powerFactor);
+        impedance = resistance / powerFactor;
       }
     } else {
       const powerkW = power * 1000;
 
       if (value.currentType === "DC") {
-        current = powerkW / voltage;
-        resistance = voltage / current;
+        const sq = powerkW / resistance;
+        current = Math.sqrt(sq);
+        voltage = powerkW / current;
         impedance = null;
       } else if (value.currentType === "AC1") {
-        const huwaari = voltage * powerFactor;
-        current = powerkW / huwaari;
-        impedance = voltage / current;
-        resistance = impedance * powerFactor;
+        const sq = powerkW / resistance;
+        current = Math.sqrt(sq);
+        voltage = powerkW / (current * powerFactor);
+        impedance = resistance / powerFactor;
       }
     }
 
-    if (smallUnitResistance) {
-      resistance = 1000 * resistance;
-      impedance ? (impedance = 1000 * impedance) : null;
-    } else {
-      resistance = resistance;
-      impedance = impedance;
-    }
-
-    setResult([current, resistance, impedance]);
+    setResult([voltage, current, impedance]);
   };
 
   return (
@@ -243,10 +188,10 @@ const PowerToResistanceAmpsCalculator: FC = () => {
           onPress={(value) => setBigUnitPower(value)}
         />
         <Textfield
-          label="V ( Voltage, V )"
+          label="R ( Resistance, Ω )"
           keyboardType="numeric"
-          onChangeText={(value) => valueChangerButarhai(value, "voltage")}
-          value={value.voltage ? value.voltage + "" : ""}
+          onChangeText={(value) => valueChangerButarhai(value, "resistance")}
+          value={value.resistance ? value.resistance + "" : ""}
         />
         {value.currentType !== "DC" ? (
           <Textfield
@@ -270,7 +215,7 @@ const PowerToResistanceAmpsCalculator: FC = () => {
 
           <View>
             <View>
-              <Text style={css.label}>I ( Current, A )</Text>
+              <Text style={css.label}>V ( Voltage, V )</Text>
               <View style={css.switchContainer}>
                 <Text style={{ textAlign: "center", fontFamily: w500 }}>
                   {result ? Math.round(result[0] * 1000) / 1000 : null}
@@ -278,24 +223,18 @@ const PowerToResistanceAmpsCalculator: FC = () => {
               </View>
             </View>
 
-            <FormSwitch
-              onPress={(value) => setSmallUnitResistance(value)}
-              label="unit of resistance and impedance"
-              unitText={["Ω", "mΩ"]}
-              unit={smallUnitResistance}
-            />
-
             <View>
-              <Text style={css.label}>R ( Resistance )</Text>
+              <Text style={css.label}>I ( Current, A )</Text>
               <View style={css.switchContainer}>
                 <Text style={{ textAlign: "center", fontFamily: w500 }}>
                   {result ? Math.round(result[1] * 1000) / 1000 : null}
                 </Text>
               </View>
             </View>
+
             {value.currentType !== "DC" ? (
               <View>
-                <Text style={css.label}>Z ( Impedance )</Text>
+                <Text style={css.label}>Z ( Impedance, Ω ) </Text>
                 <View style={css.switchContainer}>
                   <Text style={{ textAlign: "center", fontFamily: w500 }}>
                     {result ? Math.round(result[2] * 1000) / 1000 : null}
@@ -320,7 +259,7 @@ const PowerToResistanceAmpsCalculator: FC = () => {
   );
 };
 
-export default PowerToResistanceAmpsCalculator;
+export default PowerToVoltageAmps;
 
 const css = StyleSheet.create({
   container: {

@@ -4,20 +4,17 @@ import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 import Button from "../components/Button";
 import TextfieldSwitch from "../components/TextfieldSwitch";
 import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import Textfield from "../components/Textfield";
 import OutputUnit from "../components/OutputUnit";
+import CalcContext from "../context/CalcContext";
 
 type Value = {
   inputValue?: number;
-  powerFactor?: number;
+  secondValue?: number;
 };
 
-type Error = {
-  inputValue?: boolean;
-  powerFactor?: boolean;
-};
+const PowerReactiveToCapacity: FC = () => {
+  const calcContext = useContext(CalcContext);
 
-const PowerToCapacity: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({});
@@ -25,10 +22,8 @@ const PowerToCapacity: FC = () => {
   // Туслах өгөгдлүүд...
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
   const [bigUnitCapacity, setBigUnitCapacity] = useState<boolean>(false);
-  const [bigUnitReactive, setBigUnitReactive] = useState<boolean>(false);
 
   // Туслах states...
-  const [error, setError] = useState<Error>({});
   const [disabled, setDisabled] = useState<boolean>(false);
 
   // Гаралт (хариу)...
@@ -45,44 +40,16 @@ const PowerToCapacity: FC = () => {
   useEffect(() => {
     let disable: boolean = false;
 
-    if (error.powerFactor) {
-      disable = !value.powerFactor || !value.inputValue || error.powerFactor;
-    } else {
-      disable = !value.powerFactor || !value.inputValue;
-    }
+    disable = !value.secondValue || !value.inputValue;
 
     setDisabled(disable);
-  }, [value, error]);
+  }, [value]);
 
   // Бутархай тоон утга авах функц...
-  const valueChangerButarhai = (
-    text: string,
-    id: keyof Value,
-    validation?: [number, number]
-  ) => {
+  const valueChangerButarhai = (text: string, id: keyof Value) => {
     const key = typeof id === "object" ? id[0] : id;
     if (text !== "") {
       // Error state шалгах хэсэг...
-      if (validation) {
-        const number = parseFloat(text);
-        if (number < validation[0] || validation[1] < number) {
-          setError((state) => {
-            state[key] = true;
-            return state;
-          });
-        } else {
-          setError((state) => {
-            state[key] = false;
-            return state;
-          });
-        }
-      } else {
-        setError((state) => {
-          state[key] = false;
-          return state;
-        });
-      }
-
       // Утга олгох хэсэг...
       setValue((value) => {
         const copy: any = { ...value };
@@ -102,19 +69,30 @@ const PowerToCapacity: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    let inputValue = 0;
-    const secondValue = value.powerFactor ? value.powerFactor : 0;
+    if (calcContext) {
+      let inputValue = 0;
+      let secondValue = 0;
 
-    if (value.inputValue) {
-      if (bigUnitPower) inputValue = value.inputValue * 1000;
-      else inputValue = value.inputValue;
-    } else inputValue = 0;
+      if (value.inputValue) {
+        if (bigUnitPower) inputValue = value.inputValue * 1000;
+        else inputValue = value.inputValue;
+      } else inputValue = 0;
 
-    const result = bigUnitCapacity
-      ? inputValue / secondValue / 1000
-      : inputValue / secondValue;
+      if (value.secondValue) {
+        if (bigUnitPower) secondValue = value.secondValue * 1000;
+        else secondValue = value.secondValue;
+      } else secondValue = 0;
 
-    setResult(result);
+      const resultReal = calcContext.complexNumber(
+        inputValue,
+        secondValue,
+        true
+      );
+
+      const result = bigUnitCapacity ? resultReal / 1000 : resultReal;
+
+      setResult(result);
+    }
   };
 
   return (
@@ -122,7 +100,7 @@ const PowerToCapacity: FC = () => {
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power, kW )" : "P ( Power, W )"}
+          label="P ( Active power )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
@@ -130,17 +108,14 @@ const PowerToCapacity: FC = () => {
           bigUnit={bigUnitPower}
           onPress={(value) => setBigUnitPower(value)}
         />
-        <Textfield
-          label="Cosф (power factor)"
+        <TextfieldSwitch
+          label="Q ( Reactive power )"
           keyboardType="numeric"
-          onChangeText={(value) =>
-            valueChangerButarhai(value, "powerFactor", [0.1, 1])
-          }
-          value={value.powerFactor ? value.powerFactor + "" : ""}
-          error={{
-            text: "Please enter a value between 0.1-1",
-            show: error.powerFactor,
-          }}
+          onChangeText={(value) => valueChangerButarhai(value, "secondValue")}
+          value={value.secondValue ? value.secondValue + "" : ""}
+          unitText={["VAr", "kVAr"]}
+          bigUnit={bigUnitPower}
+          onPress={(value) => setBigUnitPower(value)}
         />
       </View>
 
@@ -168,7 +143,7 @@ const PowerToCapacity: FC = () => {
   );
 };
 
-export default PowerToCapacity;
+export default PowerReactiveToCapacity;
 
 const css = StyleSheet.create({
   container: {

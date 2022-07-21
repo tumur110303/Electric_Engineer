@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { gray, main, mainBackground, mainText, w500 } from "../constants";
+import { blue, gray, main, mainBackground, mainText, w500 } from "../constants";
 import Button from "./Button";
 
 type Props = {
@@ -51,12 +51,6 @@ const CustomAlert: FC<Props> = ({
 export default CustomAlert;
 
 const css = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
   overlay: {
     position: "absolute",
     width: "100%",
@@ -72,7 +66,7 @@ const css = StyleSheet.create({
     textAlign: "center",
   },
   wrapper: {
-    backgroundColor: gray,
+    backgroundColor: blue,
     borderRadius: 10,
     marginVertical: 30,
     marginHorizontal: 20,

@@ -26,7 +26,6 @@ const PowerFactorCalculator: FC = () => {
 
   // Туслах өгөгдлүүд...
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
-  const [bigUnitCapacity, setBigUnitCapacity] = useState<boolean>(false);
 
   // Туслах states...
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -41,7 +40,6 @@ const PowerFactorCalculator: FC = () => {
     setValue({});
     setResult(undefined);
     setBigUnitPower(false);
-    setBigUnitCapacity(false);
   };
 
   useEffect(() => {
@@ -86,8 +84,8 @@ const PowerFactorCalculator: FC = () => {
     } else inputValue = 0;
 
     if (value.secondValue) {
-      if (bigUnitCapacity) secondValue = value.secondValue * 1000;
-      else if (!bigUnitCapacity) secondValue = value.secondValue;
+      if (bigUnitPower) secondValue = value.secondValue * 1000;
+      else if (!bigUnitPower) secondValue = value.secondValue;
     } else secondValue = 1;
 
     const result = inputValue / secondValue;
@@ -103,14 +101,19 @@ const PowerFactorCalculator: FC = () => {
   return (
     <ScrollView style={css.container}>
       <CustomAlert
-        title="Error Text : "
+        title="wrong input value"
         visible={alertVisible}
         setVisible={setAlertVisible}
       >
         <View style={css.alert}>
-          <Text
-            style={{ color: mainBackground, fontFamily: w400, fontSize: 16 }}
-          >{`The value P > S is not allowed`}</Text>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <Text style={{ color: red, fontFamily: w500, fontSize: 16 }}>
+              Error Text :{" "}
+            </Text>
+            <Text
+              style={{ color: mainBackground, fontFamily: w400, fontSize: 16 }}
+            >{`The value P > S is not allowed.`}</Text>
+          </View>
         </View>
       </CustomAlert>
       <View style={css.inputFiled}>
@@ -125,13 +128,13 @@ const PowerFactorCalculator: FC = () => {
           onPress={(value) => setBigUnitPower(value)}
         />
         <TextfieldSwitch
-          label={bigUnitCapacity ? "S ( Capacity )" : "S ( Capacity )"}
+          label="S ( Capacity )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "secondValue")}
           value={value.secondValue ? value.secondValue + "" : ""}
           unitText={["VA", "kVA"]}
-          bigUnit={bigUnitCapacity}
-          onPress={(value) => setBigUnitCapacity(value)}
+          bigUnit={bigUnitPower}
+          onPress={(value) => setBigUnitPower(value)}
         />
       </View>
 

@@ -28,7 +28,7 @@ type Props = {
   unitText?: string | [string, string];
 };
 
-const Textfield: FC<Props> = ({ label, style, unit, unitText, onPress }) => {
+const FormSwitch: FC<Props> = ({ label, style, unit, unitText, onPress }) => {
   return (
     <View style={[css.container, style]}>
       {label && <Text style={css.title}>{label}</Text>}
@@ -85,7 +85,7 @@ const Textfield: FC<Props> = ({ label, style, unit, unitText, onPress }) => {
   );
 };
 
-export default Textfield;
+export default FormSwitch;
 
 const css = StyleSheet.create({
   // Агуулж буй view хэлбэржүүлэлт...

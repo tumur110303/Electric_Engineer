@@ -6,6 +6,7 @@ import TextfieldSwitch from "../components/TextfieldSwitch";
 import { mainBackground, mainText, w400, w500, orange } from "../constants";
 import Textfield from "../components/Textfield";
 import OutputUnit from "../components/OutputUnit";
+import CalcContext from "../context/CalcContext";
 
 type Value = {
   inputValue?: number;
@@ -17,14 +18,15 @@ type Error = {
   powerFactor?: boolean;
 };
 
-const PowerToCapacity: FC = () => {
+const CapacityToReactiveCalculator: FC = () => {
+  const calcContext = useContext(CalcContext);
+
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({});
 
   // Туслах өгөгдлүүд...
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
-  const [bigUnitCapacity, setBigUnitCapacity] = useState<boolean>(false);
   const [bigUnitReactive, setBigUnitReactive] = useState<boolean>(false);
 
   // Туслах states...
@@ -102,19 +104,26 @@ const PowerToCapacity: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    let inputValue = 0;
-    const secondValue = value.powerFactor ? value.powerFactor : 0;
+    if (calcContext) {
+      let inputValue = 0;
+      const secondValue = value.powerFactor ? value.powerFactor : 0;
 
-    if (value.inputValue) {
-      if (bigUnitPower) inputValue = value.inputValue * 1000;
-      else inputValue = value.inputValue;
-    } else inputValue = 0;
+      if (value.inputValue) {
+        if (bigUnitPower) inputValue = value.inputValue * 1000;
+        else inputValue = value.inputValue;
+      } else inputValue = 0;
 
-    const result = bigUnitCapacity
-      ? inputValue / secondValue / 1000
-      : inputValue / secondValue;
+      const thirdValue = inputValue * secondValue;
+      const resultReal = calcContext.complexNumber(
+        thirdValue,
+        inputValue,
+        false
+      );
 
-    setResult(result);
+      const result = bigUnitReactive ? resultReal / 1000 : resultReal;
+
+      setResult(result);
+    }
   };
 
   return (
@@ -122,11 +131,11 @@ const PowerToCapacity: FC = () => {
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power, kW )" : "P ( Power, W )"}
+          label="S ( Apparent power )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
-          unitText={["W", "kW"]}
+          unitText={["VA", "kVA"]}
           bigUnit={bigUnitPower}
           onPress={(value) => setBigUnitPower(value)}
         />
@@ -147,10 +156,10 @@ const PowerToCapacity: FC = () => {
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
         <OutputUnit
-          onPress={(value) => setBigUnitCapacity(value)}
-          bigUnit={bigUnitCapacity}
-          label="S ( apparent power )"
-          unitText={["VA", "kVA"]}
+          onPress={(value) => setBigUnitReactive(value)}
+          bigUnit={bigUnitReactive}
+          label="Q ( reactive power )"
+          unitText={["VAr", "kVAr"]}
           result={result}
         />
       </View>
@@ -168,7 +177,7 @@ const PowerToCapacity: FC = () => {
   );
 };
 
-export default PowerToCapacity;
+export default CapacityToReactiveCalculator;
 
 const css = StyleSheet.create({
   container: {

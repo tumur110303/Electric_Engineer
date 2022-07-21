@@ -1,54 +1,69 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
+import CalcContext from "../context/CalcContext";
 import Button from "../components/Button";
-import TextfieldSwitch from "../components/TextfieldSwitch";
+import FormPicker from "../components/FormPicker";
 import { mainBackground, mainText, w400, w500, orange } from "../constants";
 import Textfield from "../components/Textfield";
 import OutputUnit from "../components/OutputUnit";
 
 type Value = {
-  inputValue?: number;
+  voltage?: number;
+  resistance?: number;
   powerFactor?: number;
+  currentType: "DC" | "AC1";
 };
 
 type Error = {
-  inputValue?: boolean;
+  voltage?: boolean;
+  resistance?: boolean;
   powerFactor?: boolean;
+  currentType: boolean;
 };
 
-const PowerToCapacity: FC = () => {
+const ResistanceVoltageToPowerCalculator: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
-  const [value, setValue] = useState<Value>({});
-
-  // Туслах өгөгдлүүд...
-  const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
-  const [bigUnitCapacity, setBigUnitCapacity] = useState<boolean>(false);
-  const [bigUnitReactive, setBigUnitReactive] = useState<boolean>(false);
+  const [value, setValue] = useState<Value>({
+    currentType: "DC",
+  });
 
   // Туслах states...
-  const [error, setError] = useState<Error>({});
+  const [error, setError] = useState<Error>({ currentType: false });
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
+
+  // Options...
+  const currentTypeOptions = [
+    { label: "Direct Current", value: "DC" },
+    { label: "Alternating Current", value: "AC1" },
+  ];
 
   // Гаралт (хариу)...
-  const [result, setResult] = useState<number>();
+  const [result, setResult] = useState<any>();
 
   // ############################# Functions ##############################
   // Reset function...
   const reset = () => {
-    setValue({});
-    setResult(undefined);
-    setBigUnitPower(false);
+    setValue({ currentType: "DC" });
+    setResult(0);
   };
 
   useEffect(() => {
     let disable: boolean = false;
 
     if (error.powerFactor) {
-      disable = !value.powerFactor || !value.inputValue || error.powerFactor;
+      disable =
+        (value.currentType !== "DC" && !value.powerFactor) ||
+        !value.voltage ||
+        !value.resistance ||
+        error.powerFactor;
     } else {
-      disable = !value.powerFactor || !value.inputValue;
+      disable =
+        (value.currentType !== "DC" && !value.powerFactor) ||
+        !value.voltage ||
+        !value.resistance;
     }
 
     setDisabled(disable);
@@ -102,57 +117,91 @@ const PowerToCapacity: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    let inputValue = 0;
-    const secondValue = value.powerFactor ? value.powerFactor : 0;
+    const resistance = value.resistance ? value.resistance : 0;
+    const voltage = value.voltage ? value.voltage : 0;
+    const powerFactor = value.powerFactor ? value.powerFactor : 1;
 
-    if (value.inputValue) {
-      if (bigUnitPower) inputValue = value.inputValue * 1000;
-      else inputValue = value.inputValue;
-    } else inputValue = 0;
+    let power = 0;
+    let capacity: number | null = 0;
+    let current = 0;
+    if (value.currentType === "DC") {
+      power = bigUnitPower
+        ? (voltage * voltage) / resistance / 1000
+        : (voltage * voltage) / resistance;
+      capacity = null;
+    } else if (value.currentType === "AC1") {
+      const impedance = resistance / powerFactor;
+      current = voltage / impedance;
+      capacity = bigUnitPower ? (voltage * current) / 1000 : voltage * current;
+      power = capacity * powerFactor;
+    }
 
-    const result = bigUnitCapacity
-      ? inputValue / secondValue / 1000
-      : inputValue / secondValue;
-
-    setResult(result);
+    setResult([power, capacity]);
   };
 
   return (
     <ScrollView style={css.container}>
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
-        <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power, kW )" : "P ( Power, W )"}
+        <FormPicker
+          label="Current type"
+          options={currentTypeOptions}
+          onValueChange={(value: any) => {
+            setValue((state) => {
+              const copyState = { ...state };
+              copyState.currentType = value;
+              return copyState;
+            });
+          }}
+          value={value.currentType}
+        />
+
+        <Textfield
+          label="V ( Voltage, V )"
           keyboardType="numeric"
-          onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
-          value={value.inputValue ? value.inputValue + "" : ""}
-          unitText={["W", "kW"]}
-          bigUnit={bigUnitPower}
-          onPress={(value) => setBigUnitPower(value)}
+          onChangeText={(value) => valueChangerButarhai(value, "voltage")}
+          value={value.voltage ? value.voltage + "" : ""}
         />
         <Textfield
-          label="Cosф (power factor)"
+          label="R ( resistance, Ω )"
           keyboardType="numeric"
-          onChangeText={(value) =>
-            valueChangerButarhai(value, "powerFactor", [0.1, 1])
-          }
-          value={value.powerFactor ? value.powerFactor + "" : ""}
-          error={{
-            text: "Please enter a value between 0.1-1",
-            show: error.powerFactor,
-          }}
+          onChangeText={(value) => valueChangerButarhai(value, "resistance")}
+          value={value.resistance ? value.resistance + "" : ""}
         />
+        {value.currentType !== "DC" ? (
+          <Textfield
+            label="Cosф (power factor)"
+            keyboardType="numeric"
+            onChangeText={(value) =>
+              valueChangerButarhai(value, "powerFactor", [0.1, 1])
+            }
+            value={value.powerFactor ? value.powerFactor + "" : ""}
+            error={{
+              text: "Please enter a value between 0.1-1",
+              show: error.powerFactor,
+            }}
+          />
+        ) : null}
       </View>
 
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
         <OutputUnit
-          onPress={(value) => setBigUnitCapacity(value)}
-          bigUnit={bigUnitCapacity}
-          label="S ( apparent power )"
-          unitText={["VA", "kVA"]}
-          result={result}
+          onPress={(value) => setBigUnitPower(value)}
+          label="P ( Active Power )"
+          unitText={["W", "kW"]}
+          result={result ? result[0] : 0}
+          bigUnit={bigUnitPower}
         />
+        {value.currentType === "AC1" ? (
+          <OutputUnit
+            onPress={(value) => setBigUnitPower(value)}
+            label="S ( Apparent Power )"
+            unitText={["VA", "kVA"]}
+            result={result ? result[1] : 0}
+            bigUnit={bigUnitPower}
+          />
+        ) : null}
       </View>
 
       <View style={{ marginVertical: 10 }}>
@@ -168,7 +217,7 @@ const PowerToCapacity: FC = () => {
   );
 };
 
-export default PowerToCapacity;
+export default ResistanceVoltageToPowerCalculator;
 
 const css = StyleSheet.create({
   container: {
@@ -210,7 +259,7 @@ const css = StyleSheet.create({
 
   output: {
     marginTop: 5,
-    marginBottom: 30,
+    marginBottom: 10,
     paddingBottom: 30,
     borderBottomWidth: 3,
     borderBottomColor: orange,
