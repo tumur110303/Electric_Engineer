@@ -3,24 +3,24 @@ import useMainHeader from "../hooks/useMainHeader";
 
 // Screens...
 import CalculatorScreen from "../screens/Calculators";
-import PowerToVoltageCalculator from "../screens/PowerToVoltageCalculator";
-import PowerToAmpCalculator from "../screens/PowerToAmpCalculator";
-import PowerCalculator from "../screens/PowerCalculator";
-import PowerFactorCalculator from "../screens/PowerFactorCalculator";
-import ResistanceToVoltageCalculator from "../screens/ResistanceToVoltageCalculator";
-import PowerToResistanceAmpsCalculator from "../screens/PowerToResistanceAmpsCalculator";
-import PowerToCapacityCalculator from "../screens/PowerToCapacityCalculator";
-import CapacityToPowerCalculator from "../screens/CapacityToPowerCalculator";
-import ResistanceToAmpsCalculator from "../screens/ResistanceToAmpsCalculator";
-import PowerToReactiveCalculator from "../screens/PowerToReactiveCalculator";
-import CapacityToReactiveCalculator from "../screens/CapacityToReactiveCalculator";
-import PowerReactiveToCapacity from "../screens/PowerReactiveToCapacity";
-import CapacityPowerToPower from "../screens/CapacityPowerToPower";
-import ResistanceVoltageToPowerCalculator from "../screens/ResistanceVoltageToPowerCalculator";
-import ResistanceAmpsToPowerCalculator from "../screens/ResistanceAmpsToPowerCalculator";
-import PowerToResistanceVoltageCalculator from "../screens/PowerToResistanceVoltageCalculator";
-import PowerToVoltageAmps from "../screens/PowerToVoltageAmps";
-import ResistanceCalculator from "../screens/ResistanceCalculator";
+import PowerToVoltageCalculator from "../screens/Simple/PowerToVoltageCalculator";
+import PowerToAmpCalculator from "../screens/Simple/PowerToAmpCalculator";
+import PowerCalculator from "../screens/Simple/PowerCalculator";
+import PowerFactorCalculator from "../screens/Simple/PowerFactorCalculator";
+import ResistanceToVoltageCalculator from "../screens/Simple/ResistanceToVoltageCalculator";
+import PowerToResistanceAmpsCalculator from "../screens/Simple/PowerToResistanceAmpsCalculator";
+import PowerToCapacityCalculator from "../screens/Simple/PowerToCapacityCalculator";
+import CapacityToPowerCalculator from "../screens/Simple/CapacityToPowerCalculator";
+import ResistanceToAmpsCalculator from "../screens/Simple/ResistanceToAmpsCalculator";
+import PowerToReactiveCalculator from "../screens/Simple/PowerToReactiveCalculator";
+import CapacityToReactiveCalculator from "../screens/Simple/CapacityToReactiveCalculator";
+import PowerReactiveToCapacity from "../screens/Simple/PowerReactiveToCapacity";
+import CapacityPowerToPower from "../screens/Simple/CapacityPowerToPower";
+import ResistanceVoltageToPowerCalculator from "../screens/Simple/ResistanceVoltageToPowerCalculator";
+import ResistanceAmpsToPowerCalculator from "../screens/Simple/ResistanceAmpsToPowerCalculator";
+import PowerToResistanceVoltageCalculator from "../screens/Simple/PowerToResistanceVoltageCalculator";
+import PowerToVoltageAmps from "../screens/Simple/PowerToVoltageAmps";
+import ResistanceCalculator from "../screens/Simple/ResistanceCalculator";
 
 export type StackNavigationParams = {
   [name: string]: undefined;
@@ -32,9 +32,9 @@ const CalculatorNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={(options) => useMainHeader(options)}
-      initialRouteName="Calculator"
+      initialRouteName="Simple Calculator"
     >
-      <Stack.Screen name="Calculator" component={CalculatorScreen} />
+      <Stack.Screen name="Simple Calculator" component={CalculatorScreen} />
       <Stack.Screen
         name="power & current to voltage"
         component={PowerToVoltageCalculator}

@@ -1,12 +1,11 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import CalcContext from "../context/CalcContext";
-import Button from "../components/Button";
-import FormPicker from "../components/FormPicker";
-import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import Textfield from "../components/Textfield";
-import OutputUnit from "../components/OutputUnit";
+import Button from "../../components/Button";
+import FormPicker from "../../components/FormPicker";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import Textfield from "../../components/Textfield";
+import OutputUnit from "../../components/OutputUnit";
 
 type Value = {
   current?: number;

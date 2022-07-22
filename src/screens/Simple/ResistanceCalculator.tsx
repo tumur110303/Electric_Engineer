@@ -1,12 +1,12 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import Button from "../components/Button";
-import FormPicker from "../components/FormPicker";
-import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import Textfield from "../components/Textfield";
-import Output from "../components/Output";
-import FormSwitch from "../components/FormSwitch";
+import Button from "../../components/Button";
+import FormPicker from "../../components/FormPicker";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import Textfield from "../../components/Textfield";
+import Output from "../../components/Output";
+import FormSwitch from "../../components/FormSwitch";
 
 type Value = {
   voltage?: number;

@@ -1,12 +1,11 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import Button from "../components/Button";
-import TextfieldSwitch from "../components/TextfieldSwitch";
-import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import Textfield from "../components/Textfield";
-import OutputUnit from "../components/OutputUnit";
-import CalcContext from "../context/CalcContext";
+import Button from "../../components/Button";
+import TextfieldSwitch from "../../components/TextfieldSwitch";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import Textfield from "../../components/Textfield";
+import OutputUnit from "../../components/OutputUnit";
 
 type Value = {
   inputValue?: number;
@@ -18,15 +17,14 @@ type Error = {
   powerFactor?: boolean;
 };
 
-const PowerToReactiveCalculator: FC = () => {
-  const calcContext = useContext(CalcContext);
-
+const PowerToCapacity: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({});
 
   // Туслах өгөгдлүүд...
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
+  const [bigUnitCapacity, setBigUnitCapacity] = useState<boolean>(false);
   const [bigUnitReactive, setBigUnitReactive] = useState<boolean>(false);
 
   // Туслах states...
@@ -104,26 +102,19 @@ const PowerToReactiveCalculator: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    if (calcContext) {
-      let inputValue = 0;
-      const secondValue = value.powerFactor ? value.powerFactor : 0;
+    let inputValue = 0;
+    const secondValue = value.powerFactor ? value.powerFactor : 0;
 
-      if (value.inputValue) {
-        if (bigUnitPower) inputValue = value.inputValue * 1000;
-        else inputValue = value.inputValue;
-      } else inputValue = 0;
+    if (value.inputValue) {
+      if (bigUnitPower) inputValue = value.inputValue * 1000;
+      else inputValue = value.inputValue;
+    } else inputValue = 0;
 
-      const thirdValue = inputValue / secondValue;
-      const resultReal = calcContext.complexNumber(
-        inputValue,
-        thirdValue,
-        false
-      );
+    const result = bigUnitCapacity
+      ? inputValue / secondValue / 1000
+      : inputValue / secondValue;
 
-      const result = bigUnitReactive ? resultReal / 1000 : resultReal;
-
-      setResult(result);
-    }
+    setResult(result);
   };
 
   return (
@@ -156,10 +147,10 @@ const PowerToReactiveCalculator: FC = () => {
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
         <OutputUnit
-          onPress={(value) => setBigUnitReactive(value)}
-          bigUnit={bigUnitReactive}
-          label="Q ( reactive power )"
-          unitText={["VAr", "kVAr"]}
+          onPress={(value) => setBigUnitCapacity(value)}
+          bigUnit={bigUnitCapacity}
+          label="S ( apparent power )"
+          unitText={["VA", "kVA"]}
           result={result}
         />
       </View>
@@ -177,7 +168,7 @@ const PowerToReactiveCalculator: FC = () => {
   );
 };
 
-export default PowerToReactiveCalculator;
+export default PowerToCapacity;
 
 const css = StyleSheet.create({
   container: {

@@ -1,28 +1,26 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import CalcContext from "../context/CalcContext";
-import Button from "../components/Button";
-import FormPicker from "../components/FormPicker";
-import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import Textfield from "../components/Textfield";
-import OutputUnit from "../components/OutputUnit";
+import Button from "../../components/Button";
+import FormPicker from "../../components/FormPicker";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import Textfield from "../../components/Textfield";
 
 type Value = {
+  resistance?: number;
   voltage?: number;
-  current?: number;
   powerFactor?: number;
-  currentType: "DC" | "AC1" | "AC3";
+  currentType: "DC" | "AC1";
 };
 
 type Error = {
+  resistance?: boolean;
   voltage?: boolean;
-  current?: boolean;
   powerFactor?: boolean;
   currentType: boolean;
 };
 
-const PowerCalculator: FC = () => {
+const ResistanceToAmpsCalculator: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({
@@ -32,13 +30,11 @@ const PowerCalculator: FC = () => {
   // Туслах states...
   const [error, setError] = useState<Error>({ currentType: false });
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
 
   // Options...
   const currentTypeOptions = [
     { label: "Direct Current", value: "DC" },
-    { label: "Alternating single-phase", value: "AC1" },
-    { label: "Alternating three-phase", value: "AC3" },
+    { label: "Alternating Current", value: "AC1" },
   ];
 
   // Гаралт (хариу)...
@@ -57,18 +53,65 @@ const PowerCalculator: FC = () => {
     if (error.powerFactor) {
       disable =
         (value.currentType !== "DC" && !value.powerFactor) ||
+        !value.resistance ||
         !value.voltage ||
-        !value.current ||
         error.powerFactor;
     } else {
       disable =
         (value.currentType !== "DC" && !value.powerFactor) ||
-        !value.voltage ||
-        !value.current;
+        !value.resistance ||
+        !value.voltage;
     }
 
     setDisabled(disable);
   }, [value, error]);
+
+  // Бүхэл тоон утга авах функц...
+  const valueChanger = (
+    text: string,
+    id: keyof Value,
+    validation?: [number, number]
+  ) => {
+    const key = typeof id === "object" ? id[0] : id;
+    if (text !== "") {
+      const number = parseInt(text);
+
+      // Error state шалгах хэсэг...
+      if (validation) {
+        if (number < validation[0] || validation[1] < number) {
+          setError((state) => {
+            state[key] = true;
+            return state;
+          });
+        } else {
+          setError((state) => {
+            state[key] = false;
+            return state;
+          });
+        }
+      } else {
+        setError((state) => {
+          state[key] = false;
+          return state;
+        });
+      }
+
+      // Утга олгох хэсэг...
+      setValue((value) => {
+        const copy: any = { ...value };
+        copy[key] = number;
+
+        return copy;
+      });
+    } else {
+      setValue((value) => {
+        const copy: any = { ...value };
+        copy[key] = undefined;
+
+        return copy;
+      });
+    }
+  };
 
   // Бутархай тоон утга авах функц...
   const valueChangerButarhai = (
@@ -118,33 +161,21 @@ const PowerCalculator: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    const threeSQ = Math.sqrt(3);
-
-    const current = value.current ? value.current : 0;
     const voltage = value.voltage ? value.voltage : 0;
+    const resistance = value.resistance ? value.resistance : 0;
     const powerFactor = value.powerFactor ? value.powerFactor : 1;
-    let power = 0;
-    let capacity: number | null = 0;
+    let current = 0;
+    let impedance: number | null = 0;
+
     if (value.currentType === "DC") {
-      power = current * voltage;
-      capacity = null;
+      current = voltage / resistance;
+      impedance = null;
     } else if (value.currentType === "AC1") {
-      power = current * voltage * powerFactor;
-      capacity = power / powerFactor;
-    } else if (value.currentType === "AC3") {
-      power = threeSQ * voltage * current * powerFactor;
-      capacity = power / powerFactor;
+      impedance = resistance / powerFactor;
+      current = voltage / impedance;
     }
 
-    if (bigUnitPower) {
-      power = power / 1000;
-      capacity = capacity ? capacity / 1000 : null;
-    } else {
-      power = power;
-      capacity = capacity;
-    }
-
-    setResult([power, capacity]);
+    setResult([current, impedance]);
   };
 
   return (
@@ -163,18 +194,17 @@ const PowerCalculator: FC = () => {
           }}
           value={value.currentType}
         />
-
         <Textfield
-          label="V ( Voltage, V )"
+          label="U ( Voltage, V )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "voltage")}
           value={value.voltage ? value.voltage + "" : ""}
         />
         <Textfield
-          label="I ( Current, A )"
+          label="R ( resistance, Ω )"
           keyboardType="numeric"
-          onChangeText={(value) => valueChangerButarhai(value, "current")}
-          value={value.current ? value.current + "" : ""}
+          onChangeText={(value) => valueChangerButarhai(value, "resistance")}
+          value={value.resistance ? value.resistance + "" : ""}
         />
         {value.currentType !== "DC" ? (
           <Textfield
@@ -194,21 +224,24 @@ const PowerCalculator: FC = () => {
 
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
-        <OutputUnit
-          onPress={(value) => setBigUnitPower(value)}
-          label="P ( Active Power )"
-          unitText={["W", "kW"]}
-          result={result ? result[0] : 0}
-          bigUnit={bigUnitPower}
-        />
+        <View>
+          <Text style={css.label}>I ( current, A )</Text>
+          <View style={css.switchContainer}>
+            <Text style={{ textAlign: "center", fontFamily: w500 }}>
+              {result ? Math.round(result[0] * 1000) / 1000 : null}
+            </Text>
+          </View>
+        </View>
+
         {value.currentType !== "DC" ? (
-          <OutputUnit
-            onPress={(value) => setBigUnitPower(value)}
-            label="S ( Apparent Power )"
-            unitText={["VA", "kVA"]}
-            result={result ? result[1] : 0}
-            bigUnit={bigUnitPower}
-          />
+          <View>
+            <Text style={css.label}>Z ( impedance, Ω )</Text>
+            <View style={css.switchContainer}>
+              <Text style={{ textAlign: "center", fontFamily: w500 }}>
+                {result ? Math.round(result[1] * 1000) / 1000 : null}
+              </Text>
+            </View>
+          </View>
         ) : null}
       </View>
 
@@ -225,7 +258,7 @@ const PowerCalculator: FC = () => {
   );
 };
 
-export default PowerCalculator;
+export default ResistanceToAmpsCalculator;
 
 const css = StyleSheet.create({
   container: {

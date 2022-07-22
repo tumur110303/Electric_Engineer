@@ -38,8 +38,8 @@ const HomeScreen: FC = () => {
 
   const contents: ContentType[] = [
     {
-      title: "Calculator",
-      navigationName: "Calculator",
+      title: "Simple Calculator",
+      navigationName: "Simple Calculator",
       icon: "calculator-variant",
       subtitle: "Electrical circuit calculations",
     },
@@ -84,8 +84,10 @@ const css = StyleSheet.create({
   item: {
     backgroundColor: mainBackground,
     marginVertical: 10,
-    paddingVertical: 10,
-    borderRadius: 5,
+    paddingVertical: 20,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
 
     flexDirection: "row",
     alignItems: "center",
@@ -104,6 +106,7 @@ const css = StyleSheet.create({
     color: mainText,
     fontSize: 16,
     textTransform: "uppercase",
+    marginBottom: 5,
   },
   subtitle: {
     fontFamily: w400,

@@ -1,35 +1,37 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import Button from "../components/Button";
-import TextfieldSwitch from "../components/TextfieldSwitch";
-import {
-  mainBackground,
-  mainText,
-  w400,
-  w500,
-  orange,
-  red,
-} from "../constants";
-import Output from "../components/Output";
-import CustomAlert from "../components/CustomAlert";
+import Button from "../../components/Button";
+import TextfieldSwitch from "../../components/TextfieldSwitch";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import Textfield from "../../components/Textfield";
+import OutputUnit from "../../components/OutputUnit";
+import CalcContext from "../../context/CalcContext";
 
 type Value = {
   inputValue?: number;
-  secondValue?: number;
+  powerFactor?: number;
 };
 
-const PowerFactorCalculator: FC = () => {
+type Error = {
+  inputValue?: boolean;
+  powerFactor?: boolean;
+};
+
+const CapacityToReactiveCalculator: FC = () => {
+  const calcContext = useContext(CalcContext);
+
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({});
 
   // Туслах өгөгдлүүд...
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
+  const [bigUnitReactive, setBigUnitReactive] = useState<boolean>(false);
 
   // Туслах states...
+  const [error, setError] = useState<Error>({});
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [alertVisible, setAlertVisible] = useState<boolean>(false);
 
   // Гаралт (хариу)...
   const [result, setResult] = useState<number>();
@@ -45,16 +47,43 @@ const PowerFactorCalculator: FC = () => {
   useEffect(() => {
     let disable: boolean = false;
 
-    disable = !value.secondValue || !value.inputValue;
+    if (error.powerFactor) {
+      disable = !value.powerFactor || !value.inputValue || error.powerFactor;
+    } else {
+      disable = !value.powerFactor || !value.inputValue;
+    }
 
     setDisabled(disable);
-  }, [value]);
+  }, [value, error]);
 
   // Бутархай тоон утга авах функц...
-  const valueChangerButarhai = (text: string, id: keyof Value) => {
+  const valueChangerButarhai = (
+    text: string,
+    id: keyof Value,
+    validation?: [number, number]
+  ) => {
     const key = typeof id === "object" ? id[0] : id;
     if (text !== "") {
       // Error state шалгах хэсэг...
+      if (validation) {
+        const number = parseFloat(text);
+        if (number < validation[0] || validation[1] < number) {
+          setError((state) => {
+            state[key] = true;
+            return state;
+          });
+        } else {
+          setError((state) => {
+            state[key] = false;
+            return state;
+          });
+        }
+      } else {
+        setError((state) => {
+          state[key] = false;
+          return state;
+        });
+      }
 
       // Утга олгох хэсэг...
       setValue((value) => {
@@ -75,72 +104,64 @@ const PowerFactorCalculator: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    let inputValue = 0;
-    let secondValue = 0;
+    if (calcContext) {
+      let inputValue = 0;
+      const secondValue = value.powerFactor ? value.powerFactor : 0;
 
-    if (value.inputValue) {
-      if (bigUnitPower) inputValue = value.inputValue * 1000;
-      else inputValue = value.inputValue;
-    } else inputValue = 0;
+      if (value.inputValue) {
+        if (bigUnitPower) inputValue = value.inputValue * 1000;
+        else inputValue = value.inputValue;
+      } else inputValue = 0;
 
-    if (value.secondValue) {
-      if (bigUnitPower) secondValue = value.secondValue * 1000;
-      else if (!bigUnitPower) secondValue = value.secondValue;
-    } else secondValue = 1;
+      const thirdValue = inputValue * secondValue;
+      const resultReal = calcContext.complexNumber(
+        thirdValue,
+        inputValue,
+        false
+      );
 
-    const result = inputValue / secondValue;
+      const result = bigUnitReactive ? resultReal / 1000 : resultReal;
 
-    if (result > 1) {
-      setAlertVisible(true);
-      reset();
-    } else {
       setResult(result);
     }
   };
 
   return (
     <ScrollView style={css.container}>
-      <CustomAlert
-        title="wrong input value"
-        visible={alertVisible}
-        setVisible={setAlertVisible}
-      >
-        <View style={css.alert}>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <Text style={{ color: red, fontFamily: w500, fontSize: 16 }}>
-              Error Text :{" "}
-            </Text>
-            <Text
-              style={{ color: mainBackground, fontFamily: w400, fontSize: 16 }}
-            >{`The value P > S is not allowed.`}</Text>
-          </View>
-        </View>
-      </CustomAlert>
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power )" : "P ( Power )"}
+          label="S ( Apparent power )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
-          unitText={["W", "kW"]}
-          bigUnit={bigUnitPower}
-          onPress={(value) => setBigUnitPower(value)}
-        />
-        <TextfieldSwitch
-          label="S ( Capacity )"
-          keyboardType="numeric"
-          onChangeText={(value) => valueChangerButarhai(value, "secondValue")}
-          value={value.secondValue ? value.secondValue + "" : ""}
           unitText={["VA", "kVA"]}
           bigUnit={bigUnitPower}
           onPress={(value) => setBigUnitPower(value)}
         />
+        <Textfield
+          label="Cosф (power factor)"
+          keyboardType="numeric"
+          onChangeText={(value) =>
+            valueChangerButarhai(value, "powerFactor", [0.1, 1])
+          }
+          value={value.powerFactor ? value.powerFactor + "" : ""}
+          error={{
+            text: "Please enter a value between 0.1-1",
+            show: error.powerFactor,
+          }}
+        />
       </View>
 
-      <View>
+      <View style={css.output}>
         <Text style={css.title}>Output : </Text>
-        <Output label="Cosф (power factor)" result={result} />
+        <OutputUnit
+          onPress={(value) => setBigUnitReactive(value)}
+          bigUnit={bigUnitReactive}
+          label="Q ( reactive power )"
+          unitText={["VAr", "kVAr"]}
+          result={result}
+        />
       </View>
 
       <View style={{ marginVertical: 10 }}>
@@ -156,7 +177,7 @@ const PowerFactorCalculator: FC = () => {
   );
 };
 
-export default PowerFactorCalculator;
+export default CapacityToReactiveCalculator;
 
 const css = StyleSheet.create({
   container: {
@@ -164,6 +185,14 @@ const css = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     flex: 1,
+  },
+  label: {
+    textTransform: "uppercase",
+    fontFamily: w400,
+    marginBottom: 5,
+    marginTop: 10,
+    marginLeft: 3,
+    color: mainText,
   },
   inputFiled: {
     marginBottom: 5,
@@ -187,6 +216,14 @@ const css = StyleSheet.create({
     fontSize: 16,
     color: mainText,
   },
+
+  output: {
+    marginTop: 5,
+    marginBottom: 30,
+    paddingBottom: 30,
+    borderBottomWidth: 3,
+    borderBottomColor: orange,
+  },
   switchContainer: {
     flex: 1,
     flexDirection: "row",
@@ -198,9 +235,5 @@ const css = StyleSheet.create({
     borderRadius: 5,
     justifyContent: "space-around",
     alignItems: "center",
-  },
-  alert: {
-    alignItems: "center",
-    marginVertical: 25,
   },
 });

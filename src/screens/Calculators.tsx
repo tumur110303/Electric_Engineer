@@ -192,11 +192,10 @@ const css = StyleSheet.create({
     alignItems: "center",
     position: "relative",
     backgroundColor: mainBackground,
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
-    borderBottomColor: green,
-    borderBottomWidth: 3,
+    marginBottom: 5,
   },
   title: {
     fontFamily: w400,

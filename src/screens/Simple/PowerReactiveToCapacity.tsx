@@ -1,11 +1,11 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import Button from "../components/Button";
-import TextfieldSwitch from "../components/TextfieldSwitch";
-import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import OutputUnit from "../components/OutputUnit";
-import CalcContext from "../context/CalcContext";
+import Button from "../../components/Button";
+import TextfieldSwitch from "../../components/TextfieldSwitch";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import OutputUnit from "../../components/OutputUnit";
+import CalcContext from "../../context/CalcContext";
 
 type Value = {
   inputValue?: number;

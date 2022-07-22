@@ -1,11 +1,11 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import Button from "../components/Button";
-import TextfieldSwitch from "../components/TextfieldSwitch";
-import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import Textfield from "../components/Textfield";
-import OutputUnit from "../components/OutputUnit";
+import Button from "../../components/Button";
+import TextfieldSwitch from "../../components/TextfieldSwitch";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import Textfield from "../../components/Textfield";
+import OutputUnit from "../../components/OutputUnit";
 
 type Value = {
   inputValue?: number;
@@ -17,7 +17,7 @@ type Error = {
   powerFactor?: boolean;
 };
 
-const PowerToCapacity: FC = () => {
+const CapacityToPowerCalculator: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({});
@@ -25,7 +25,6 @@ const PowerToCapacity: FC = () => {
   // Туслах өгөгдлүүд...
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
   const [bigUnitCapacity, setBigUnitCapacity] = useState<boolean>(false);
-  const [bigUnitReactive, setBigUnitReactive] = useState<boolean>(false);
 
   // Туслах states...
   const [error, setError] = useState<Error>({});
@@ -111,8 +110,8 @@ const PowerToCapacity: FC = () => {
     } else inputValue = 0;
 
     const result = bigUnitCapacity
-      ? inputValue / secondValue / 1000
-      : inputValue / secondValue;
+      ? (inputValue * secondValue) / 1000
+      : inputValue * secondValue;
 
     setResult(result);
   };
@@ -122,11 +121,11 @@ const PowerToCapacity: FC = () => {
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power, kW )" : "P ( Power, W )"}
+          label={bigUnitPower ? "S ( capacity, kVA )" : "S ( capacity, VA )"}
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
-          unitText={["W", "kW"]}
+          unitText={["VA", "kVA"]}
           bigUnit={bigUnitPower}
           onPress={(value) => setBigUnitPower(value)}
         />
@@ -144,13 +143,13 @@ const PowerToCapacity: FC = () => {
         />
       </View>
 
-      <View style={css.output}>
+      <View>
         <Text style={css.title}>Output : </Text>
         <OutputUnit
           onPress={(value) => setBigUnitCapacity(value)}
           bigUnit={bigUnitCapacity}
-          label="S ( apparent power )"
-          unitText={["VA", "kVA"]}
+          label="P ( power )"
+          unitText={["W", "kW"]}
           result={result}
         />
       </View>
@@ -168,7 +167,7 @@ const PowerToCapacity: FC = () => {
   );
 };
 
-export default PowerToCapacity;
+export default CapacityToPowerCalculator;
 
 const css = StyleSheet.create({
   container: {

@@ -21,7 +21,7 @@ const MainNavigation = () => {
       <Drawer.Screen name="Home" component={HomeScreen} />
 
       <Drawer.Screen
-        name="Calculator"
+        name="Simple Calculator"
         options={{
           headerShown: false,
         }}

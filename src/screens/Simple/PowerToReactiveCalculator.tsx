@@ -1,11 +1,12 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
-import Button from "../components/Button";
-import TextfieldSwitch from "../components/TextfieldSwitch";
-import { mainBackground, mainText, w400, w500, orange } from "../constants";
-import Textfield from "../components/Textfield";
-import OutputUnit from "../components/OutputUnit";
+import Button from "../../components/Button";
+import TextfieldSwitch from "../../components/TextfieldSwitch";
+import { mainBackground, mainText, w400, w500, orange } from "../../constants";
+import Textfield from "../../components/Textfield";
+import OutputUnit from "../../components/OutputUnit";
+import CalcContext from "../../context/CalcContext";
 
 type Value = {
   inputValue?: number;
@@ -17,14 +18,16 @@ type Error = {
   powerFactor?: boolean;
 };
 
-const CapacityToPowerCalculator: FC = () => {
+const PowerToReactiveCalculator: FC = () => {
+  const calcContext = useContext(CalcContext);
+
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({});
 
   // Туслах өгөгдлүүд...
   const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
-  const [bigUnitCapacity, setBigUnitCapacity] = useState<boolean>(false);
+  const [bigUnitReactive, setBigUnitReactive] = useState<boolean>(false);
 
   // Туслах states...
   const [error, setError] = useState<Error>({});
@@ -101,19 +104,26 @@ const CapacityToPowerCalculator: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    let inputValue = 0;
-    const secondValue = value.powerFactor ? value.powerFactor : 0;
+    if (calcContext) {
+      let inputValue = 0;
+      const secondValue = value.powerFactor ? value.powerFactor : 0;
 
-    if (value.inputValue) {
-      if (bigUnitPower) inputValue = value.inputValue * 1000;
-      else inputValue = value.inputValue;
-    } else inputValue = 0;
+      if (value.inputValue) {
+        if (bigUnitPower) inputValue = value.inputValue * 1000;
+        else inputValue = value.inputValue;
+      } else inputValue = 0;
 
-    const result = bigUnitCapacity
-      ? (inputValue * secondValue) / 1000
-      : inputValue * secondValue;
+      const thirdValue = inputValue / secondValue;
+      const resultReal = calcContext.complexNumber(
+        inputValue,
+        thirdValue,
+        false
+      );
 
-    setResult(result);
+      const result = bigUnitReactive ? resultReal / 1000 : resultReal;
+
+      setResult(result);
+    }
   };
 
   return (
@@ -121,11 +131,11 @@ const CapacityToPowerCalculator: FC = () => {
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label={bigUnitPower ? "S ( capacity, kVA )" : "S ( capacity, VA )"}
+          label={bigUnitPower ? "P ( Power, kW )" : "P ( Power, W )"}
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
-          unitText={["VA", "kVA"]}
+          unitText={["W", "kW"]}
           bigUnit={bigUnitPower}
           onPress={(value) => setBigUnitPower(value)}
         />
@@ -143,13 +153,13 @@ const CapacityToPowerCalculator: FC = () => {
         />
       </View>
 
-      <View>
+      <View style={css.output}>
         <Text style={css.title}>Output : </Text>
         <OutputUnit
-          onPress={(value) => setBigUnitCapacity(value)}
-          bigUnit={bigUnitCapacity}
-          label="P ( power )"
-          unitText={["W", "kW"]}
+          onPress={(value) => setBigUnitReactive(value)}
+          bigUnit={bigUnitReactive}
+          label="Q ( reactive power )"
+          unitText={["VAr", "kVAr"]}
           result={result}
         />
       </View>
@@ -167,7 +177,7 @@ const CapacityToPowerCalculator: FC = () => {
   );
 };
 
-export default CapacityToPowerCalculator;
+export default PowerToReactiveCalculator;
 
 const css = StyleSheet.create({
   container: {
