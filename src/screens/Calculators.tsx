@@ -138,6 +138,12 @@ const CalculatorScreen: FC = () => {
       icon: "resistor",
       color: green,
     },
+    {
+      title: "Inductive Reactance calculator",
+      navigationName: "Inductive Reactance calculator",
+      icon: "wave",
+      color: blue,
+    },
   ];
   return (
     <View style={css.container}>
