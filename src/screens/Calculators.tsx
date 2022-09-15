@@ -144,6 +144,12 @@ const CalculatorScreen: FC = () => {
       icon: "wave",
       color: blue,
     },
+    {
+      title: "Capacitive Reactance calculator",
+      navigationName: "Capacitive Reactance calculator",
+      icon: "wave",
+      color: green,
+    },
   ];
   return (
     <View style={css.container}>

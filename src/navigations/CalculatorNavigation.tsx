@@ -22,6 +22,7 @@ import PowerToResistanceVoltageCalculator from "../screens/Simple/PowerToResista
 import PowerToVoltageAmps from "../screens/Simple/PowerToVoltageAmps";
 import ResistanceCalculator from "../screens/Simple/ResistanceCalculator";
 import InductiveReactanceCalculator from "../screens/Simple/InductiveReactanceCalculator";
+import CapacitiveReactanceCalculator from "../screens/Simple/CapacitiveReactanceCalculator";
 
 export type StackNavigationParams = {
   [name: string]: undefined;
@@ -108,6 +109,10 @@ const CalculatorNavigation = () => {
       <Stack.Screen
         name="Inductive Reactance calculator"
         component={InductiveReactanceCalculator}
+      />
+      <Stack.Screen
+        name="Capacitive Reactance calculator"
+        component={CapacitiveReactanceCalculator}
       />
     </Stack.Navigator>
   );
