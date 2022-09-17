@@ -146,7 +146,7 @@ const CapacitiveReactanceCalculator: FC = () => {
         />
         <View>
           <Text style={css.label}>
-            X<Text style={{ fontSize: 12 }}>C</Text> ( Capacitive Reactance, Ω )
+            X<Text style={{ fontSize: 12 }}>C</Text> ( Capacitive Reactance )
           </Text>
           <View style={css.switchContainer}>
             <Text style={{ textAlign: "center", fontFamily: w500 }}>

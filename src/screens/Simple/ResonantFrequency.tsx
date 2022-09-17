@@ -8,12 +8,12 @@ import TextfieldSwitch from "../../components/TextfieldSwitch";
 import FormSwitch from "../../components/FormSwitch";
 
 type Value = {
-  frequency?: number;
+  inductance?: number;
   capacitance?: number;
 };
 
 type Error = {
-  frequency?: boolean;
+  inductance?: boolean;
   capacitance?: boolean;
 };
 
@@ -25,6 +25,7 @@ const ResonantFrequency: FC = () => {
   // Туслах states...
   const [bigUnit, setBigUnit] = useState<boolean>(false);
   const [microFarad, setMicroFarad] = useState<boolean>(false);
+  const [henry, setHenry] = useState<boolean>(false);
   const [error, setError] = useState<Error>({});
   const [disabled, setDisabled] = useState<boolean>(false);
 
@@ -39,7 +40,7 @@ const ResonantFrequency: FC = () => {
   };
 
   useEffect(() => {
-    const disable: boolean = !value.frequency || !value.capacitance;
+    const disable: boolean = !value.inductance || !value.capacitance;
 
     setDisabled(disable);
   }, [value, error]);
@@ -92,36 +93,37 @@ const ResonantFrequency: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    const frequency = value.frequency ? value.frequency : 0;
+    const inductance = value.inductance
+      ? henry
+        ? value.inductance
+        : value.inductance / 1000
+      : 0;
     const capacitance = value.capacitance
       ? microFarad
-        ? value.capacitance / 1000000
-        : value.capacitance / 1000000000
+        ? value.capacitance
+        : value.capacitance / 1000
       : 0;
-    const capacitiveReactance = 1 / (2 * Math.PI * frequency * capacitance);
+    const noogdwor = 2 * Math.PI * Math.sqrt(capacitance * inductance);
+    const frequency = bigUnit ? 1 / noogdwor : 1000 / noogdwor;
 
-    const realCapacitiveReactance = bigUnit
-      ? capacitiveReactance / 1000
-      : capacitiveReactance;
-
-    setResult(realCapacitiveReactance);
+    setResult(frequency);
   };
 
   return (
     <ScrollView style={css.container}>
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
-        <Textfield
-          label="f ( Frequency, Hz )"
+
+        <TextfieldSwitch
+          label="L ( inductance )"
           keyboardType="numeric"
           onChangeText={(value) =>
-            valueChangerButarhai(value, "frequency", [0, 10000])
+            valueChangerButarhai(value, "inductance", [0, 100000])
           }
-          value={value.frequency ? value.frequency + "" : ""}
-          error={{
-            text: "Please enter a value between 0-10000",
-            show: error.frequency,
-          }}
+          onPress={setHenry}
+          bigUnit={henry}
+          value={value.inductance ? value.inductance + "" : ""}
+          unitText={["milliHenry", "Henry"]}
         />
         <TextfieldSwitch
           label="C ( capacitance )"
@@ -140,14 +142,12 @@ const ResonantFrequency: FC = () => {
         <Text style={css.title}>Output : </Text>
         <FormSwitch
           onPress={(value) => setBigUnit(value)}
-          unitText={["Ω", "kΩ"]}
+          unitText={["Hz", "kHz"]}
           unit={bigUnit}
-          label="unit of Capacitive Reactance"
+          label="unit of Frequency"
         />
         <View>
-          <Text style={css.label}>
-            X<Text style={{ fontSize: 12 }}>C</Text> ( Capacitive Reactance, Ω )
-          </Text>
+          <Text style={css.label}>f ( Frequency )</Text>
           <View style={css.switchContainer}>
             <Text style={{ textAlign: "center", fontFamily: w500 }}>
               {result ? Math.round(result * 1000) / 1000 : null}

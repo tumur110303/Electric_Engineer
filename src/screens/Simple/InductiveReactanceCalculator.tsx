@@ -139,7 +139,7 @@ const InductiveReactanceCalculator: FC = () => {
         />
         <View>
           <Text style={css.label}>
-            X<Text style={{ fontSize: 12 }}>L</Text> ( Inductive Reactance, Ω )
+            X<Text style={{ fontSize: 12 }}>L</Text> ( Inductive Reactance )
           </Text>
           <View style={css.switchContainer}>
             <Text style={{ textAlign: "center", fontFamily: w500 }}>
