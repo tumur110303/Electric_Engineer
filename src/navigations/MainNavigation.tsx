@@ -4,7 +4,7 @@ import { useContext } from "react";
 import useMainHeader from "../hooks/useMainHeader";
 
 import HomeScreen from "../screens/HomeScreen";
-import CalculatorNavigation from "./CalculatorNavigation";
+import SimpleCalculatorNavigation from "./SimpleCalculatorNavigation";
 
 export type MainNavigationParams = {
   [name: string]: undefined;
@@ -25,7 +25,7 @@ const MainNavigation = () => {
         options={{
           headerShown: false,
         }}
-        component={CalculatorNavigation}
+        component={SimpleCalculatorNavigation}
       />
     </Drawer.Navigator>
   );

@@ -17,7 +17,7 @@ type Error = {
   capacitance?: boolean;
 };
 
-const CapacitiveReactanceCalculator: FC = () => {
+const ResonantFrequency: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
   const [value, setValue] = useState<Value>({});
@@ -169,7 +169,7 @@ const CapacitiveReactanceCalculator: FC = () => {
   );
 };
 
-export default CapacitiveReactanceCalculator;
+export default ResonantFrequency;
 
 const css = StyleSheet.create({
   container: {

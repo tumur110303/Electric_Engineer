@@ -17,7 +17,7 @@ import {
   white,
   main,
   gray,
-} from "../constants";
+} from "../../constants";
 import { useNavigation } from "@react-navigation/native";
 
 type ContentType = {
@@ -139,16 +139,22 @@ const CalculatorScreen: FC = () => {
       color: green,
     },
     {
-      title: "Inductive Reactance calculator",
+      title: "Inductive Reactance",
       navigationName: "Inductive Reactance calculator",
       icon: "wave",
       color: blue,
     },
     {
-      title: "Capacitive Reactance calculator",
+      title: "Capacitive Reactance",
       navigationName: "Capacitive Reactance calculator",
-      icon: "wave",
+      icon: "math-norm",
       color: green,
+    },
+    {
+      title: "Resonant Frequency",
+      navigationName: "Resonant Frequency",
+      icon: "waveform",
+      color: blue,
     },
   ];
   return (

@@ -2,7 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import useMainHeader from "../hooks/useMainHeader";
 
 // Screens...
-import CalculatorScreen from "../screens/Calculators";
+import CalculatorScreen from "../screens/Simple/SimpleCalculatorsScreen";
 import PowerToVoltageCalculator from "../screens/Simple/PowerToVoltageCalculator";
 import PowerToAmpCalculator from "../screens/Simple/PowerToAmpCalculator";
 import PowerCalculator from "../screens/Simple/PowerCalculator";
@@ -23,6 +23,7 @@ import PowerToVoltageAmps from "../screens/Simple/PowerToVoltageAmps";
 import ResistanceCalculator from "../screens/Simple/ResistanceCalculator";
 import InductiveReactanceCalculator from "../screens/Simple/InductiveReactanceCalculator";
 import CapacitiveReactanceCalculator from "../screens/Simple/CapacitiveReactanceCalculator";
+import ResonantFrequency from "../screens/Simple/ResonantFrequency";
 
 export type StackNavigationParams = {
   [name: string]: undefined;
@@ -30,7 +31,7 @@ export type StackNavigationParams = {
 
 const Stack = createStackNavigator<StackNavigationParams>();
 
-const CalculatorNavigation = () => {
+const SimpleCalculatorNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={(options) => useMainHeader(options)}
@@ -114,8 +115,9 @@ const CalculatorNavigation = () => {
         name="Capacitive Reactance calculator"
         component={CapacitiveReactanceCalculator}
       />
+      <Stack.Screen name="Resonant Frequency" component={ResonantFrequency} />
     </Stack.Navigator>
   );
 };
 
-export default CalculatorNavigation;
+export default SimpleCalculatorNavigation;
