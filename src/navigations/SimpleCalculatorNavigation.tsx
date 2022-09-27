@@ -24,6 +24,7 @@ import ResistanceCalculator from "../screens/Simple/ResistanceCalculator";
 import InductiveReactanceCalculator from "../screens/Simple/InductiveReactanceCalculator";
 import CapacitiveReactanceCalculator from "../screens/Simple/CapacitiveReactanceCalculator";
 import ResonantFrequency from "../screens/Simple/ResonantFrequency";
+import CapacitorSizer from "../screens/Simple/CapacitorSizer";
 
 export type StackNavigationParams = {
   [name: string]: undefined;
@@ -116,6 +117,10 @@ const SimpleCalculatorNavigation = () => {
         component={CapacitiveReactanceCalculator}
       />
       <Stack.Screen name="Resonant Frequency" component={ResonantFrequency} />
+      <Stack.Screen
+        name="Capacitor Sizing Equation"
+        component={CapacitorSizer}
+      />
     </Stack.Navigator>
   );
 };

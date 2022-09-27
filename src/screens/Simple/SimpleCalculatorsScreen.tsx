@@ -156,6 +156,12 @@ const CalculatorScreen: FC = () => {
       icon: "waveform",
       color: blue,
     },
+    {
+      title: "Capacitor Sizing Equation",
+      navigationName: "Capacitor Sizing Equation",
+      icon: "drag-horizontal-variant",
+      color: green,
+    },
   ];
   return (
     <View style={css.container}>

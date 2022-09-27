@@ -12,15 +12,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 
-import {
-  blue,
-  headerText,
-  mainText,
-  orange,
-  red,
-  w400,
-  w500,
-} from "../constants";
+import { blue, headerText, mainText, red, w400, w500 } from "../constants";
 
 type Props = {
   label?: string;
