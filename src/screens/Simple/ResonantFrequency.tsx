@@ -117,9 +117,7 @@ const ResonantFrequency: FC = () => {
         <TextfieldSwitch
           label="L ( inductance )"
           keyboardType="numeric"
-          onChangeText={(value) =>
-            valueChangerButarhai(value, "inductance", [0, 100000])
-          }
+          onChangeText={(value) => valueChangerButarhai(value, "inductance")}
           onPress={setHenry}
           bigUnit={henry}
           value={value.inductance ? value.inductance + "" : ""}
@@ -128,9 +126,7 @@ const ResonantFrequency: FC = () => {
         <TextfieldSwitch
           label="C ( capacitance )"
           keyboardType="numeric"
-          onChangeText={(value) =>
-            valueChangerButarhai(value, "capacitance", [0, 100000])
-          }
+          onChangeText={(value) => valueChangerButarhai(value, "capacitance")}
           onPress={setMicroFarad}
           bigUnit={microFarad}
           value={value.capacitance ? value.capacitance + "" : ""}

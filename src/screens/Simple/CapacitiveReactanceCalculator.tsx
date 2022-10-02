@@ -114,21 +114,13 @@ const CapacitiveReactanceCalculator: FC = () => {
         <Textfield
           label="f ( Frequency, Hz )"
           keyboardType="numeric"
-          onChangeText={(value) =>
-            valueChangerButarhai(value, "frequency", [0, 10000])
-          }
+          onChangeText={(value) => valueChangerButarhai(value, "frequency")}
           value={value.frequency ? value.frequency + "" : ""}
-          error={{
-            text: "Please enter a value between 0-10000",
-            show: error.frequency,
-          }}
         />
         <TextfieldSwitch
           label="C ( capacitance )"
           keyboardType="numeric"
-          onChangeText={(value) =>
-            valueChangerButarhai(value, "capacitance", [0, 100000])
-          }
+          onChangeText={(value) => valueChangerButarhai(value, "capacitance")}
           onPress={setMicroFarad}
           bigUnit={microFarad}
           value={value.capacitance ? value.capacitance + "" : ""}

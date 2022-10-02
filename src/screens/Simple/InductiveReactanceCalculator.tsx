@@ -107,25 +107,19 @@ const InductiveReactanceCalculator: FC = () => {
           label="f ( Frequency, Hz )"
           keyboardType="numeric"
           onChangeText={(value) =>
-            valueChangerButarhai(value, "frequency", [0, 10000])
+            valueChangerButarhai(value, "frequency", [0, 1000000])
           }
           value={value.frequency ? value.frequency + "" : ""}
           error={{
-            text: "Please enter a value between 0-10000",
+            text: "Please enter a value between 0 and 1000000",
             show: error.frequency,
           }}
         />
         <Textfield
           label="L ( inductance, Henry )"
           keyboardType="numeric"
-          onChangeText={(value) =>
-            valueChangerButarhai(value, "inductance", [0, 100000])
-          }
+          onChangeText={(value) => valueChangerButarhai(value, "inductance")}
           value={value.inductance ? value.inductance + "" : ""}
-          error={{
-            text: "Please enter a value between 0-100000",
-            show: error.inductance,
-          }}
         />
       </View>
 

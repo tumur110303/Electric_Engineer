@@ -218,7 +218,7 @@ const ResistanceToVoltageCalculator: FC = () => {
             }
             value={value.powerFactor ? value.powerFactor + "" : ""}
             error={{
-              text: "Please enter a value between 0.1-1",
+              text: "Please enter a value between 0.1 and 1",
               show: error.powerFactor,
             }}
           />

@@ -114,11 +114,11 @@ const CapacitorSizer: FC = () => {
           label="e ( permittivity,  Farad/meter )"
           keyboardType="numeric"
           onChangeText={(value) =>
-            valueChangerButarhai(value, "permittivity", [0, 10000])
+            valueChangerButarhai(value, "permittivity", [0, 1000000])
           }
           value={value.permittivity ? value.permittivity + "" : ""}
           error={{
-            text: "Please enter a value between 0 and 10000",
+            text: "Please enter a value between 0 and 1000000",
             show: error.permittivity,
           }}
         />
@@ -126,11 +126,11 @@ const CapacitorSizer: FC = () => {
           label="A ( area of plate overlap,  sq.meter )"
           keyboardType="numeric"
           onChangeText={(value) =>
-            valueChangerButarhai(value, "area", [0, 100])
+            valueChangerButarhai(value, "area", [0, 1000000])
           }
           value={value.area ? value.area + "" : ""}
           error={{
-            text: "Please enter a value between 0 and 100",
+            text: "Please enter a value between 0 and 1000000",
             show: error.area,
           }}
         />
@@ -138,11 +138,11 @@ const CapacitorSizer: FC = () => {
           label="d ( distance of plates, meter )"
           keyboardType="numeric"
           onChangeText={(value) =>
-            valueChangerButarhai(value, "distance", [0, 1000])
+            valueChangerButarhai(value, "distance", [0, 1000000])
           }
           value={value.distance ? value.distance + "" : ""}
           error={{
-            text: "Please enter a value between 0 and 1000",
+            text: "Please enter a value between 0 and 1000000",
             show: error.distance,
           }}
         />
