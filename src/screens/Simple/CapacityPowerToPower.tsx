@@ -131,7 +131,7 @@ const CapacityPowerToPower: FC = () => {
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label="s ( apparent power )"
+          label="Apparent power ( S )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
@@ -140,7 +140,7 @@ const CapacityPowerToPower: FC = () => {
           onPress={(value) => setBigUnitPower(value)}
         />
         <TextfieldSwitch
-          label="P or Q ( Active or Reactive power )"
+          label="Active or Reactive power ( P or Q )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "secondValue")}
           value={value.secondValue ? value.secondValue + "" : ""}
@@ -155,7 +155,7 @@ const CapacityPowerToPower: FC = () => {
         <OutputUnit
           onPress={(value) => setBigUnitCapacity(value)}
           bigUnit={bigUnitCapacity}
-          label="Q or P ( Reactive or Active power )"
+          label="Reactive or Active power ( Q or P )"
           unitText={["VAr or W", "kVAr or kW"]}
           result={result}
         />

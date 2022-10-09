@@ -131,7 +131,7 @@ const CapacityToReactiveCalculator: FC = () => {
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label="S ( Apparent power )"
+          label="Apparent power ( S )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
@@ -140,7 +140,7 @@ const CapacityToReactiveCalculator: FC = () => {
           onPress={(value) => setBigUnitPower(value)}
         />
         <Textfield
-          label="Cosф (power factor)"
+          label="Power factor (Cosφ)"
           keyboardType="numeric"
           onChangeText={(value) =>
             valueChangerButarhai(value, "powerFactor", [0.1, 1])
@@ -158,7 +158,7 @@ const CapacityToReactiveCalculator: FC = () => {
         <OutputUnit
           onPress={(value) => setBigUnitReactive(value)}
           bigUnit={bigUnitReactive}
-          label="Q ( reactive power )"
+          label="Reactive power ( Q )"
           unitText={["VAr", "kVAr"]}
           result={result}
         />

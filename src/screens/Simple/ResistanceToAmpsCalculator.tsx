@@ -195,20 +195,20 @@ const ResistanceToAmpsCalculator: FC = () => {
           value={value.currentType}
         />
         <Textfield
-          label="U ( Voltage, V )"
+          label="Voltage ( V ), V"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "voltage")}
           value={value.voltage ? value.voltage + "" : ""}
         />
         <Textfield
-          label="R ( resistance, Ω )"
+          label="Resistance ( R ), Ω"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "resistance")}
           value={value.resistance ? value.resistance + "" : ""}
         />
         {value.currentType !== "DC" ? (
           <Textfield
-            label="Cosф (power factor)"
+            label="Power factor (Cosφ)"
             keyboardType="numeric"
             onChangeText={(value) =>
               valueChangerButarhai(value, "powerFactor", [0.1, 1])
@@ -225,7 +225,7 @@ const ResistanceToAmpsCalculator: FC = () => {
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
         <View>
-          <Text style={css.label}>I ( current, A )</Text>
+          <Text style={css.label}>Current ( I ), A</Text>
           <View style={css.switchContainer}>
             <Text style={{ textAlign: "center", fontFamily: w500 }}>
               {result ? Math.round(result[0] * 1000) / 1000 : null}
@@ -235,7 +235,7 @@ const ResistanceToAmpsCalculator: FC = () => {
 
         {value.currentType !== "DC" ? (
           <View>
-            <Text style={css.label}>Z ( impedance, Ω )</Text>
+            <Text style={css.label}>Impedance ( Z ), Ω</Text>
             <View style={css.switchContainer}>
               <Text style={{ textAlign: "center", fontFamily: w500 }}>
                 {result ? Math.round(result[1] * 1000) / 1000 : null}
@@ -268,7 +268,6 @@ const css = StyleSheet.create({
     flex: 1,
   },
   label: {
-    textTransform: "uppercase",
     fontFamily: w400,
     marginBottom: 5,
     marginTop: 10,

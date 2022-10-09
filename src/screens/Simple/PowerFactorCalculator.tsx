@@ -119,7 +119,7 @@ const PowerFactorCalculator: FC = () => {
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
         <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power )" : "P ( Power )"}
+          label="Power ( P )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "inputValue")}
           value={value.inputValue ? value.inputValue + "" : ""}
@@ -128,7 +128,7 @@ const PowerFactorCalculator: FC = () => {
           onPress={(value) => setBigUnitPower(value)}
         />
         <TextfieldSwitch
-          label="S ( Capacity )"
+          label="Capacity ( S )"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "secondValue")}
           value={value.secondValue ? value.secondValue + "" : ""}
@@ -140,7 +140,7 @@ const PowerFactorCalculator: FC = () => {
 
       <View>
         <Text style={css.title}>Output : </Text>
-        <Output label="Cosф (power factor)" result={result} />
+        <Output label="Power factor (Cosφ)" result={result} />
       </View>
 
       <View style={{ marginVertical: 10 }}>

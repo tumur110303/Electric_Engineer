@@ -177,7 +177,7 @@ const PowerToVoltageAmps: FC = () => {
           value={value.currentType}
         />
         <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power, kW )" : "P ( Power, W )"}
+          label={bigUnitPower ? "Power ( P ), kW" : "Power ( P ), W"}
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "power")}
           value={value.power ? value.power + "" : ""}
@@ -186,14 +186,14 @@ const PowerToVoltageAmps: FC = () => {
           onPress={(value) => setBigUnitPower(value)}
         />
         <Textfield
-          label="R ( Resistance, Ω )"
+          label="Resistance ( R ), Ω"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "resistance")}
           value={value.resistance ? value.resistance + "" : ""}
         />
         {value.currentType !== "DC" ? (
           <Textfield
-            label="Cosф (power factor)"
+            label="Power factor (Cosφ)"
             keyboardType="numeric"
             onChangeText={(value) =>
               valueChangerButarhai(value, "powerFactor", [0.1, 1])
@@ -213,7 +213,7 @@ const PowerToVoltageAmps: FC = () => {
 
           <View>
             <View>
-              <Text style={css.label}>V ( Voltage, V )</Text>
+              <Text style={css.label}>Voltage ( V ), V</Text>
               <View style={css.switchContainer}>
                 <Text style={{ textAlign: "center", fontFamily: w500 }}>
                   {result ? Math.round(result[0] * 1000) / 1000 : null}
@@ -222,7 +222,7 @@ const PowerToVoltageAmps: FC = () => {
             </View>
 
             <View>
-              <Text style={css.label}>I ( Current, A )</Text>
+              <Text style={css.label}>Current ( I ), A</Text>
               <View style={css.switchContainer}>
                 <Text style={{ textAlign: "center", fontFamily: w500 }}>
                   {result ? Math.round(result[1] * 1000) / 1000 : null}
@@ -232,7 +232,7 @@ const PowerToVoltageAmps: FC = () => {
 
             {value.currentType !== "DC" ? (
               <View>
-                <Text style={css.label}>Z ( Impedance, Ω ) </Text>
+                <Text style={css.label}>Impedance ( Z ), Ω </Text>
                 <View style={css.switchContainer}>
                   <Text style={{ textAlign: "center", fontFamily: w500 }}>
                     {result ? Math.round(result[2] * 1000) / 1000 : null}
@@ -268,7 +268,6 @@ const css = StyleSheet.create({
   },
   Icon: {},
   label: {
-    textTransform: "uppercase",
     fontFamily: w400,
     marginBottom: 5,
     marginTop: 10,

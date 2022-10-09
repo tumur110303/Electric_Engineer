@@ -162,6 +162,12 @@ const CalculatorScreen: FC = () => {
       icon: "drag-horizontal-variant",
       color: green,
     },
+    {
+      title: "Inductor Sizing Equation",
+      navigationName: "Inductor Sizing Equation",
+      icon: "wave",
+      color: blue,
+    },
   ];
   return (
     <View style={css.container}>

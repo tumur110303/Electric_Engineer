@@ -2,69 +2,46 @@ import { FC, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, ScrollView, View, Alert } from "react-native";
 
 import Button from "../../components/Button";
-import FormPicker from "../../components/FormPicker";
 import { mainBackground, mainText, w400, w500, orange } from "../../constants";
 import Textfield from "../../components/Textfield";
-import OutputUnit from "../../components/OutputUnit";
+import FormSwitch from "../../components/FormSwitch";
 
 type Value = {
-  voltage?: number;
-  current?: number;
-  powerFactor?: number;
-  currentType: "DC" | "AC1" | "AC3";
+  numberTurn?: number;
+  permeability?: number;
+  area?: number;
+  avgLength?: number;
 };
 
 type Error = {
-  voltage?: boolean;
-  current?: boolean;
-  powerFactor?: boolean;
-  currentType: boolean;
+  numberTurn?: boolean;
+  permeability?: boolean;
+  area?: boolean;
+  avgLength?: boolean;
 };
 
-const PowerCalculator: FC = () => {
+const InductorSizer: FC = () => {
   // ########################## Өгөгдлүүд & Options #########################
   // Үндсэн өгөгдөл...
-  const [value, setValue] = useState<Value>({
-    currentType: "DC",
-  });
+  const [value, setValue] = useState<Value>({});
 
   // Туслах states...
-  const [error, setError] = useState<Error>({ currentType: false });
+  const [bigUnit, setBigUnit] = useState<boolean>(false);
+  const [error, setError] = useState<Error>({});
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [bigUnitPower, setBigUnitPower] = useState<boolean>(false);
-
-  // Options...
-  const currentTypeOptions = [
-    { label: "Direct Current", value: "DC" },
-    { label: "Alternating single-phase", value: "AC1" },
-    { label: "Alternating three-phase", value: "AC3" },
-  ];
 
   // Гаралт (хариу)...
-  const [result, setResult] = useState<any>();
+  const [result, setResult] = useState<number | null>();
 
   // ############################# Functions ##############################
   // Reset function...
   const reset = () => {
-    setValue({ currentType: "DC" });
-    setResult(0);
+    setValue({});
+    setResult(null);
   };
 
   useEffect(() => {
-    let disable: boolean = false;
-
-    if (error.powerFactor) {
-      disable =
-        (value.currentType !== "DC" && !value.powerFactor) ||
-        !value.voltage ||
-        !value.current ||
-        error.powerFactor;
-    } else {
-      disable =
-        (value.currentType !== "DC" && !value.powerFactor) ||
-        !value.voltage ||
-        !value.current;
-    }
+    const disable: boolean = !value.permeability || !value.area;
 
     setDisabled(disable);
   }, [value, error]);
@@ -117,98 +94,88 @@ const PowerCalculator: FC = () => {
 
   // Үндсэн тооцооны функц...
   const calc = () => {
-    const threeSQ = Math.sqrt(3);
+    const permeability = value.permeability ? value.permeability : 0;
+    const area = value.area ? value.area : 0;
+    const avgLength = value.avgLength ? value.avgLength : 0;
+    const numberTurn = value.numberTurn ? value.numberTurn : 0;
 
-    const current = value.current ? value.current : 0;
-    const voltage = value.voltage ? value.voltage : 0;
-    const powerFactor = value.powerFactor ? value.powerFactor : 1;
-    let power = 0;
-    let capacity: number | null = 0;
-    if (value.currentType === "DC") {
-      power = current * voltage;
-      capacity = null;
-    } else if (value.currentType === "AC1") {
-      power = current * voltage * powerFactor;
-      capacity = power / powerFactor;
-    } else if (value.currentType === "AC3") {
-      power = threeSQ * voltage * current * powerFactor;
-      capacity = power / powerFactor;
-    }
+    const hurtwer = permeability * area * numberTurn * numberTurn;
+    const inductanceByHenry = hurtwer / avgLength;
+    const inductance = bigUnit ? inductanceByHenry : inductanceByHenry * 1000;
 
-    if (bigUnitPower) {
-      power = power / 1000;
-      capacity = capacity ? capacity / 1000 : null;
-    } else {
-      power = power;
-      capacity = capacity;
-    }
-
-    setResult([power, capacity]);
+    setResult(inductance);
   };
 
   return (
     <ScrollView style={css.container}>
       <View style={css.inputFiled}>
         <Text style={css.title}>Input : </Text>
-        <FormPicker
-          label="Current type"
-          options={currentTypeOptions}
-          onValueChange={(value: any) => {
-            setValue((state) => {
-              const copyState = { ...state };
-              copyState.currentType = value;
-              return copyState;
-            });
+        <Textfield
+          label="N ( Number of Turns )"
+          keyboardType="numeric"
+          onChangeText={(value) =>
+            valueChangerButarhai(value, "numberTurn", [0, 10000000])
+          }
+          value={value.numberTurn ? value.numberTurn + "" : ""}
+          error={{
+            text: "Please enter a value between 0 and 10000000",
+            show: error.numberTurn,
           }}
-          value={value.currentType}
-        />
-
-        <Textfield
-          label="Voltage ( V ), V"
-          keyboardType="numeric"
-          onChangeText={(value) => valueChangerButarhai(value, "voltage")}
-          value={value.voltage ? value.voltage + "" : ""}
         />
         <Textfield
-          label="Current ( I ), A"
+          label="μ ( permeability,  Henry/meter )"
           keyboardType="numeric"
-          onChangeText={(value) => valueChangerButarhai(value, "current")}
-          value={value.current ? value.current + "" : ""}
+          onChangeText={(value) =>
+            valueChangerButarhai(value, "permeability", [0, 10000000])
+          }
+          value={value.permeability ? value.permeability + "" : ""}
+          error={{
+            text: "Please enter a value between 0 and 10000000",
+            show: error.permeability,
+          }}
         />
-        {value.currentType !== "DC" ? (
-          <Textfield
-            label="Power factor (Cosφ)"
-            keyboardType="numeric"
-            onChangeText={(value) =>
-              valueChangerButarhai(value, "powerFactor", [0.1, 1])
-            }
-            value={value.powerFactor ? value.powerFactor + "" : ""}
-            error={{
-              text: "Please enter a value between 0.1 and 1",
-              show: error.powerFactor,
-            }}
-          />
-        ) : null}
+        <Textfield
+          label="A ( area of coil,  sq.meter )"
+          keyboardType="numeric"
+          onChangeText={(value) =>
+            valueChangerButarhai(value, "area", [0, 1000000])
+          }
+          value={value.area ? value.area + "" : ""}
+          error={{
+            text: "Please enter a value between 0 and 1000000",
+            show: error.area,
+          }}
+        />
+        <Textfield
+          label="d ( average Length of coil, meter )"
+          keyboardType="numeric"
+          onChangeText={(value) =>
+            valueChangerButarhai(value, "avgLength", [0, 1000000])
+          }
+          value={value.avgLength ? value.avgLength + "" : ""}
+          error={{
+            text: "Please enter a value between 0 and 1000000",
+            show: error.avgLength,
+          }}
+        />
       </View>
 
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
-        <OutputUnit
-          onPress={(value) => setBigUnitPower(value)}
-          label="Active Power ( P )"
-          unitText={["W", "kW"]}
-          result={result ? result[0] : 0}
-          bigUnit={bigUnitPower}
+        <FormSwitch
+          onPress={(value) => setBigUnit(value)}
+          unitText={["milliHenry", "Henry"]}
+          unit={bigUnit}
+          label="unit of inductance"
         />
-        {value.currentType !== "DC" ? (
-          <OutputUnit
-            onPress={(value) => setBigUnitPower(value)}
-            label="Apparent Power ( S )"
-            unitText={["VA", "kVA"]}
-            result={result ? result[1] : 0}
-            bigUnit={bigUnitPower}
-          />
-        ) : null}
+        <View>
+          <Text style={css.label}>L ( Inductance )</Text>
+          <View style={css.switchContainer}>
+            <Text style={{ textAlign: "center", fontFamily: w500 }}>
+              {result ? Math.round(result * 1000) / 1000 : null}
+            </Text>
+          </View>
+        </View>
       </View>
 
       <View style={{ marginVertical: 10 }}>
@@ -224,7 +191,7 @@ const PowerCalculator: FC = () => {
   );
 };
 
-export default PowerCalculator;
+export default InductorSizer;
 
 const css = StyleSheet.create({
   container: {

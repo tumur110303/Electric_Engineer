@@ -220,7 +220,7 @@ const PowerToVoltageCalculator: FC = () => {
           value={value.currentType}
         />
         <TextfieldSwitch
-          label={bigUnitPower ? "P ( Power, kW )" : "P ( Power, W )"}
+          label={bigUnitPower ? "Power ( P ), kW" : "Power ( P ), W"}
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "power")}
           value={value.power ? value.power + "" : ""}
@@ -229,14 +229,14 @@ const PowerToVoltageCalculator: FC = () => {
           onPress={(value) => setBigUnitPower(value)}
         />
         <Textfield
-          label="I ( Current, A )"
+          label="Current ( I ), A"
           keyboardType="numeric"
           onChangeText={(value) => valueChangerButarhai(value, "current")}
           value={value.current ? value.current + "" : ""}
         />
         {value.currentType !== "DC" ? (
           <Textfield
-            label="Cosф (power factor)"
+            label="Power factor (Cosφ)"
             keyboardType="numeric"
             onChangeText={(value) =>
               valueChangerButarhai(value, "powerFactor", [0.1, 1])
@@ -252,7 +252,7 @@ const PowerToVoltageCalculator: FC = () => {
 
       <View style={css.output}>
         <Text style={css.title}>Output : </Text>
-        <Text style={css.label}>V ( Voltage, V )</Text>
+        <Text style={css.label}>Voltage ( V ), V</Text>
         <View style={css.switchContainer}>
           <Text style={{ textAlign: "center", fontFamily: w500 }}>
             {result ? Math.round(result * 1000) / 1000 : null}
@@ -283,7 +283,6 @@ const css = StyleSheet.create({
     flex: 1,
   },
   label: {
-    textTransform: "uppercase",
     fontFamily: w400,
     marginBottom: 5,
     marginTop: 10,

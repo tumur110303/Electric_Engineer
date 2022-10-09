@@ -91,7 +91,6 @@ const css = StyleSheet.create({
   // Агуулж буй view хэлбэржүүлэлт...
   container: { flex: 1, alignItems: "center" },
   title: {
-    textTransform: "uppercase",
     fontFamily: w400,
     marginBottom: 5,
     marginTop: 10,

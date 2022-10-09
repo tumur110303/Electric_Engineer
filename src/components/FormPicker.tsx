@@ -114,7 +114,6 @@ const css = StyleSheet.create({
     flex: 1,
   },
   title: {
-    textTransform: "uppercase",
     fontFamily: w400,
     marginBottom: 5,
     color: mainText,
