@@ -125,7 +125,7 @@ const SimpleCalculatorNavigation = () => {
       />
       <Stack.Screen name="Inductor Sizing Equation" component={InductorSizer} />
       <Stack.Screen
-        name="Characteristic Impedance Parallel"
+        name="Characteristic Impedance (Parallel)"
         component={CharacteristicImpedanceParallel}
       />
     </Stack.Navigator>

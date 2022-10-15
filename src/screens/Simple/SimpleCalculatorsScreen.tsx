@@ -169,8 +169,8 @@ const CalculatorScreen: FC = () => {
       color: blue,
     },
     {
-      title: "Characteristic Impedance Parallel",
-      navigationName: "Characteristic Impedance Parallel",
+      title: "Characteristic Impedance (Parallel)",
+      navigationName: "Characteristic Impedance (Parallel)",
       icon: "drag-horizontal-variant",
       color: green,
     },
