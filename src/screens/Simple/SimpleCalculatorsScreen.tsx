@@ -159,7 +159,7 @@ const CalculatorScreen: FC = () => {
     {
       title: "Capacitor Sizing Equation",
       navigationName: "Capacitor Sizing Equation",
-      icon: "drag-horizontal-variant",
+      icon: "equal",
       color: green,
     },
     {
@@ -167,6 +167,12 @@ const CalculatorScreen: FC = () => {
       navigationName: "Inductor Sizing Equation",
       icon: "wave",
       color: blue,
+    },
+    {
+      title: "Characteristic Impedance Parallel",
+      navigationName: "Characteristic Impedance Parallel",
+      icon: "drag-horizontal-variant",
+      color: green,
     },
   ];
   return (
