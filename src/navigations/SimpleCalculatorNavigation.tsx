@@ -27,6 +27,8 @@ import ResonantFrequency from "../screens/Simple/ResonantFrequency";
 import CapacitorSizer from "../screens/Simple/CapacitorSizer";
 import InductorSizer from "../screens/Simple/InductorSizer";
 import CharacteristicImpedanceParallel from "../screens/Simple/CharacteristicImpedanceParallel";
+import CharacteristicImpedanceCoaxial from "../screens/Simple/CharacteristicImpedanceCoaxial";
+import HorsePower from "../screens/Simple/HorsePower";
 
 export type StackNavigationParams = {
   [name: string]: undefined;
@@ -128,6 +130,11 @@ const SimpleCalculatorNavigation = () => {
         name="Characteristic Impedance (Parallel)"
         component={CharacteristicImpedanceParallel}
       />
+      <Stack.Screen
+        name="Characteristic Impedance (Coaxial)"
+        component={CharacteristicImpedanceCoaxial}
+      />
+      <Stack.Screen name="Horse Power" component={HorsePower} />
     </Stack.Navigator>
   );
 };

@@ -1,7 +1,6 @@
 import { FC, useContext } from "react";
 import {
   FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,7 +14,6 @@ import {
   mainText,
   mainBackground,
   white,
-  main,
   gray,
 } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
@@ -172,6 +170,18 @@ const CalculatorScreen: FC = () => {
       title: "Characteristic Impedance (Parallel)",
       navigationName: "Characteristic Impedance (Parallel)",
       icon: "drag-horizontal-variant",
+      color: green,
+    },
+    {
+      title: "Characteristic Impedance (Coaxial)",
+      navigationName: "Characteristic Impedance (Coaxial)",
+      icon: "adjust",
+      color: blue,
+    },
+    {
+      title: "Horse Power",
+      navigationName: "Horse Power",
+      icon: "currency-php",
       color: green,
     },
   ];
