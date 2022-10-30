@@ -29,6 +29,7 @@ import InductorSizer from "../screens/Simple/InductorSizer";
 import CharacteristicImpedanceParallel from "../screens/Simple/CharacteristicImpedanceParallel";
 import CharacteristicImpedanceCoaxial from "../screens/Simple/CharacteristicImpedanceCoaxial";
 import HorsePower from "../screens/Simple/HorsePower";
+import EnergyStorageResistance from "../screens/Simple/EnergyStorageResistance";
 
 export type StackNavigationParams = {
   [name: string]: undefined;
@@ -135,6 +136,10 @@ const SimpleCalculatorNavigation = () => {
         component={CharacteristicImpedanceCoaxial}
       />
       <Stack.Screen name="Horse Power" component={HorsePower} />
+      <Stack.Screen
+        name="Energy Storage (resistance)"
+        component={EnergyStorageResistance}
+      />
     </Stack.Navigator>
   );
 };

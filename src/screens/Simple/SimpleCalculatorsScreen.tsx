@@ -184,6 +184,12 @@ const CalculatorScreen: FC = () => {
       icon: "currency-php",
       color: green,
     },
+    {
+      title: "Energy Storage (resistance)",
+      navigationName: "Energy Storage (resistance)",
+      icon: "battery-charging",
+      color: blue,
+    },
   ];
   return (
     <View style={css.container}>
