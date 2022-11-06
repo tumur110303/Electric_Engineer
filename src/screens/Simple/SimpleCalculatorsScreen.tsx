@@ -190,6 +190,12 @@ const CalculatorScreen: FC = () => {
       icon: "battery-charging",
       color: blue,
     },
+    {
+      title: "Energy Storage (inductance)",
+      navigationName: "Energy Storage (inductance)",
+      icon: "battery-charging",
+      color: green,
+    },
   ];
   return (
     <View style={css.container}>
