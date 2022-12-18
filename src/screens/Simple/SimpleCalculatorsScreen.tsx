@@ -1,4 +1,4 @@
-import { FC, useContext } from "react";
+import { FC } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -181,7 +181,7 @@ const CalculatorScreen: FC = () => {
     {
       title: "Horse Power",
       navigationName: "Horse Power",
-      icon: "currency-php",
+      icon: "alpha-h",
       color: green,
     },
     {

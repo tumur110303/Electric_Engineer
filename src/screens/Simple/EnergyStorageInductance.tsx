@@ -5,7 +5,6 @@ import Button from "../../components/Button";
 import TextfieldSwitch from "../../components/TextfieldSwitch";
 import { mainBackground, mainText, w400, w500, orange } from "../../constants";
 import Textfield from "../../components/Textfield";
-import OutputUnit from "../../components/OutputUnit";
 import CalcContext from "../../context/CalcContext";
 import Output from "../../components/Output";
 
